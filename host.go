@@ -15,5 +15,3 @@ func HostDiskpoolInfo() {
 	res := get("http://localhost:8080/abc1")
 	fmt.Println("output is ", string(res))
 }
-
-
