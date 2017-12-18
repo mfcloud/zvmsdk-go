@@ -7,13 +7,11 @@ import (
 
 
 func HostInfo() {
-	res := get("http://localhost:8080/abc")
-	fmt.Println("output is ", string(res))
+	resp, result := get("http://localhost:8080/abc")
+	fmt.Println("output is ", resp, string(result))
 }
 
 func HostDiskpoolInfo() {
-	res := get("http://localhost:8080/abc1")
-	fmt.Println("output is ", string(res))
+	resp, result := get("http://localhost:8080/abc1")
+	fmt.Println("output is ", resp, string(result))
 }
-
-
