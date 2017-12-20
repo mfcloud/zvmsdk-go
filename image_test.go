@@ -19,7 +19,6 @@ func assertEqual(t *testing.T, a interface{}, b interface{}, message string) {
 
 
 func Test_ImageCreate(t *testing.T) {
-	t.Log("first pass")
 
 	meta := map[string]string{"apple": "5", "lettuce": "7"}
 	data := buildImageCreateRequest("name", "url", meta, "host")
@@ -34,4 +33,6 @@ func Test_ImageCreate(t *testing.T) {
 	assertEqual(t, s.Remote_host, "host", "")
 	assertEqual(t, s.Image_meta["apple"], "5", "")
 	assertEqual(t, s.Image_meta["lettuce"], "7", "")
+
+	fmt.Println("Test_ImageCreate passed")
 }
