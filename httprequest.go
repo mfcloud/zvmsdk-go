@@ -56,7 +56,7 @@ func post(url string, body []byte) (int, []byte) {
         return resp.StatusCode, result
 }
 
-func update(url string, body []byte) (int, []byte) {
+func put(url string, body []byte) (int, []byte) {
         var s []byte = make([]byte, 1)
 
         client := &http.Client{}
