@@ -55,8 +55,8 @@ func ImageGet(name string) {
 		buffer.WriteString(name)
 	}
 	res, result := get(buffer.String())
-
 	fmt.Println("output is ", res, string(result))
 }
+
 
 

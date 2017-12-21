@@ -1,9 +1,9 @@
 package zvmsdk
 
 import (
-	"fmt"
 	"testing"
 	"encoding/json"
+	"github.com/stretchr/testify/require"
 
 )
 
@@ -20,9 +20,8 @@ func Test_VswitchCreate(t *testing.T) {
         if err != nil {
 		panic(err.Error())
 	}
-	assertEqual(t, result.Name, "name1", "")
-	assertEqual(t, result.Rdev, "rdev1", "")
-	fmt.Println("Test_VswitchCreate passed")
+	require.Equal(t, result.Name, "name1")
+	require.Equal(t, result.Rdev, "rdev1")
 }
 
 func Test_VswitchUpdate(t *testing.T) {
@@ -36,16 +35,12 @@ func Test_VswitchUpdate(t *testing.T) {
         if err != nil {
                 panic(err.Error())
         }
-        assertEqual(t, result.GrantUserId, "id1", "")
-	fmt.Println("Test_VswitchUpdate passed")
+        require.Equal(t, result.GrantUserId, "id1")
 }
 
 
-func Test_All(t *testing.T) {
-	var vs VswitchUpdateBody
-        vs.GrantUserId = "id1"
-
-	VswitchUpdate("n1", vs)
-
-	VswitchList()
+func Test_VswitchList(t *testing.T) {
+	//FIXME: mock this later
+	status, _ := VswitchList()
+	require.Equal(t, status, 200)
 }

@@ -51,14 +51,14 @@ func VswitchDelete(name string) {
 }
 
 //vswitch list takes no param
-func VswitchList() {
+func VswitchList() (int, []byte) {
 	var buffer bytes.Buffer
 
 	buffer.WriteString("http://localhost:8080/vswitchs")
 
-	res, result := get(buffer.String())
+	status, data := get(buffer.String())
 
-	fmt.Println("output is ", res, string(result))
+	return status, data
 }
 
 func buildVswitchUpdateRequest(body VswitchUpdateBody) ([]byte) {
