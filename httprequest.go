@@ -3,6 +3,7 @@ package zvmsdk
 
 import (
         "net/http"
+	"strings"
 	"io/ioutil"
 )
 
@@ -35,7 +36,7 @@ func post(url string, body []byte) (int, []byte) {
 
 	client := &http.Client{}
 
-        req, err := http.NewRequest("POST", url, nil)
+        req, err := http.NewRequest("POST", url, strings.NewReader(string(body)))
 
         // set content type
         req.Header.Set("Content-Type", "application/json")

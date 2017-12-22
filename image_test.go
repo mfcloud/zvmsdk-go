@@ -1,7 +1,6 @@
 package zvmsdk
 
 import (
-	"fmt"
 	"testing"
 	"encoding/json"
 	"github.com/stretchr/testify/require"
@@ -23,6 +22,5 @@ func Test_ImageCreate(t *testing.T) {
 	require.Equal(t, s.Remote_host, "host")
 	require.Equal(t, s.Image_meta["apple"], "5")
 	require.Equal(t, s.Image_meta["lettuce"], "7")
-	fmt.Println("Test_ImageCreate passed")
 }
 

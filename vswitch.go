@@ -36,7 +36,7 @@ func VswitchCreate(body VswitchCreateBody) {
 
 	data := buildVswitchCreateRequest(body)
 
-	res, result := post("http://localhost:8080", data)
+	res, result := post("http://localhost:8080/vswitchs/", data)
 	fmt.Println("output is ", res, string(result))
 }
 
