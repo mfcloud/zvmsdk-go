@@ -1,17 +1,23 @@
 package zvmsdk
 
-
 import (
-	"fmt"
+	"bytes"
 )
 
 
-func HostInfo() {
-	resp, result := get("http://localhost:8080/abc")
-	fmt.Println("output is ", resp, string(result))
+func HostInfo() (int, []byte) {
+	status, data := get("http://localhost:8080/host")
+
+	return status, data
 }
 
-func HostDiskpoolInfo() {
-	resp, result := get("http://localhost:8080/abc1")
-	fmt.Println("output is ", resp, string(result))
+func HostDiskpoolInfo(disk string) (int, []byte) {
+        var buffer bytes.Buffer
+
+        buffer.WriteString("http://localhost:8080/host/disk/")
+        buffer.WriteString(disk)
+
+        status, data := get(buffer.String())
+
+        return status, data
 }
