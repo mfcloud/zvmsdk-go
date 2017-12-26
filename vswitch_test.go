@@ -8,7 +8,7 @@ import (
 )
 
 
-func Test_VswitchCreate(t *testing.T) {
+func Test_buildVswitchCreateRequest(t *testing.T) {
 	var vs VswitchCreateBody
 	vs.Name = "name1"
 	vs.Rdev = "rdev1"
@@ -24,7 +24,7 @@ func Test_VswitchCreate(t *testing.T) {
 	require.Equal(t, result.Rdev, "rdev1")
 }
 
-func Test_VswitchUpdate(t *testing.T) {
+func Test_buildVswitchUpdateRequest(t *testing.T) {
         var vs VswitchUpdateBody
         vs.GrantUserId = "id1"
 
@@ -40,7 +40,19 @@ func Test_VswitchUpdate(t *testing.T) {
 
 
 func Test_VswitchList(t *testing.T) {
-	//FIXME: mock this later
-	status, _ := VswitchList()
+	status, _ := VswitchList(test_endpoint)
 	require.Equal(t, status, 200)
+}
+
+func Test_VswitchDelete(t *testing.T) {
+	status, _ := VswitchDelete(test_endpoint, "id1")
+	require.Equal(t, status, 200)
+}
+
+func Test_VswitchUpdate(t *testing.T) {
+	var vs VswitchUpdateBody
+
+	vs.GrantUserId = "id1"
+        status, _ := VswitchUpdate(test_endpoint, "vsw1", vs)
+        require.Equal(t, status, 200)
 }

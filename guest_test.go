@@ -41,7 +41,7 @@ func Test_buildGuestCreateRequestJson(t *testing.T) {
 
 func Test_GuestList(t *testing.T) {
         //FIXME: mock this later
-        status, _ := GuestList()
+        status, _ := GuestList(test_endpoint)
         require.Equal(t, status, 200)
 }
 
@@ -62,7 +62,7 @@ func Test_GuestCreate(t *testing.T) {
 
         vs.Disklist = disklist
 
-        status, _ := GuestCreate(vs)
+        status, _ := GuestCreate(test_endpoint, vs)
 	require.Equal(t, status, 200)
 }
 
