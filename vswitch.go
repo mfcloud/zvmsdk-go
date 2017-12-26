@@ -2,7 +2,6 @@ package zvmsdk
 
 
 import (
-	"fmt"
 	"bytes"
 	"encoding/json"
 )
@@ -16,6 +15,15 @@ type VswitchCreateBody struct {
 type VswitchUpdateBody struct {
 	GrantUserId string `json:"grant_userid"`
 }
+
+func getEndpointwithVswitchs(endpoint string) (bytes.Buffer) {
+        var buffer bytes.Buffer
+
+        buffer.WriteString(endpoint)
+        buffer.WriteString("/vswitchs")
+        return buffer
+}
+
 
 func buildVswitchCreateRequest(body VswitchCreateBody) ([]byte) {
 	keys := []string{"name", "rdev"}
@@ -32,30 +40,30 @@ func buildVswitchCreateRequest(body VswitchCreateBody) ([]byte) {
 	return data
 }
 
-func VswitchCreate(body VswitchCreateBody) {
+func VswitchCreate(endpoint string, body VswitchCreateBody) (int, []byte) {
 
-	data := buildVswitchCreateRequest(body)
+	bodyJson := buildVswitchCreateRequest(body)
 
-	res, result := post("http://localhost:8080/vswitchs/", data)
-	fmt.Println("output is ", res, string(result))
+	buffer := getEndpointwithVswitchs(endpoint)
+	status, data := post(buffer.String(), bodyJson)
+
+	return status, data
 }
 
-func VswitchDelete(name string) {
-	var buffer bytes.Buffer
+func VswitchDelete(endpoint string, name string) (int, []byte) {
 
-        buffer.WriteString("http://localhost:8080/vswitchs/")
+	buffer := getEndpointwithVswitchs(endpoint)
+	buffer.WriteString("/")
         buffer.WriteString(name)
-        res, result := delete(buffer.String(), nil)
 
-	fmt.Println("output is ", res, string(result))
+        status, data := delete(buffer.String(), nil)
+
+	return status, data
 }
 
 //vswitch list takes no param
-func VswitchList() (int, []byte) {
-	var buffer bytes.Buffer
-
-	buffer.WriteString("http://localhost:8080/vswitchs")
-
+func VswitchList(endpoint string) (int, []byte) {
+	buffer := getEndpointwithVswitchs(endpoint)
 	status, data := get(buffer.String())
 
 	return status, data
@@ -76,14 +84,14 @@ func buildVswitchUpdateRequest(body VswitchUpdateBody) ([]byte) {
         return data
 }
 
-func VswitchUpdate(name string, body VswitchUpdateBody) {
-	data := buildVswitchUpdateRequest(body)
+func VswitchUpdate(endpoint string, name string, body VswitchUpdateBody) (int, []byte) {
+	bodyJson := buildVswitchUpdateRequest(body)
 
-	var buffer bytes.Buffer
-
-        buffer.WriteString("http://localhost:8080/vswitchs/")
+	buffer := getEndpointwithVswitchs(endpoint)
+	buffer.WriteString("/")
 	buffer.WriteString(name)
-        res, result := put(buffer.String(), data)
 
-        fmt.Println("output is ", res, string(result))
+        status, data := put(buffer.String(), bodyJson)
+
+	return status, data
 }

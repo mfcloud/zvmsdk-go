@@ -5,16 +5,27 @@ import (
 )
 
 
-func HostInfo() (int, []byte) {
-	status, data := get("http://localhost:8080/host")
+func getEndpointwithHost(endpoint string) (bytes.Buffer) {
+        var buffer bytes.Buffer
+
+        buffer.WriteString(endpoint)
+        buffer.WriteString("/host")
+        return buffer
+}
+
+
+
+func HostInfo(endpoint string) (int, []byte) {
+	buffer := getEndpointwithHost(endpoint)
+	status, data := get(buffer.String())
 
 	return status, data
 }
 
-func HostDiskpoolInfo(disk string) (int, []byte) {
-        var buffer bytes.Buffer
+func HostDiskpoolInfo(endpoint string, disk string) (int, []byte) {
 
-        buffer.WriteString("http://localhost:8080/host/disk/")
+	buffer := getEndpointwithHost(endpoint)
+	buffer.WriteString("/disk/")
         buffer.WriteString(disk)
 
         status, data := get(buffer.String())

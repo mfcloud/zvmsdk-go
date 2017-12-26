@@ -17,10 +17,10 @@ func Test_ImageCreate(t *testing.T) {
         if err != nil {
 		panic(err.Error())
 	}
-	require.Equal(t, s.Image_name, "name")
+	require.Equal(t, s.Name, "name")
 	require.Equal(t, s.Url, "url")
 	require.Equal(t, s.Remote_host, "host")
-	require.Equal(t, s.Image_meta["apple"], "5")
-	require.Equal(t, s.Image_meta["lettuce"], "7")
+	require.Equal(t, s.Meta["apple"], "5")
+	require.Equal(t, s.Meta["lettuce"], "7")
 }
 

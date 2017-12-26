@@ -23,6 +23,15 @@ type GuestCreateBody struct {
 }
 
 
+func getEndpointwithGuests(endpoint string) (bytes.Buffer) {
+        var buffer bytes.Buffer
+
+        buffer.WriteString(endpoint)
+        buffer.WriteString("/guests")
+        return buffer
+}
+
+
 func buildGuestCreateDiskListJson(disklist []GuestCreateDiskList) ([]map[string]interface{}) {
 	length := len(disklist)
 
@@ -66,32 +75,32 @@ func buildGuestCreateRequestJson(body GuestCreateBody) ([]byte) {
 	return data
 }
 
-func GuestCreate(body GuestCreateBody) (int, []byte) {
 
-	send := buildGuestCreateRequestJson(body)
+func GuestCreate(endpoint string, body GuestCreateBody) (int, []byte) {
 
-	status, data := post("http://localhost:8080/guests", send)
+	createJson := buildGuestCreateRequestJson(body)
+
+	buffer := getEndpointwithGuests(endpoint)
+	status, data := post(buffer.String(), createJson)
+
 	return status, data
 }
 
+func GuestList(endpoint string) (int, []byte) {
 
-//vswitch list takes no param
-func GuestList() (int, []byte) {
-        var buffer bytes.Buffer
-
-        buffer.WriteString("http://localhost:8080/guests")
-
+	buffer := getEndpointwithGuests(endpoint)
         status, data := get(buffer.String())
 
         return status, data
 }
 
 
-func GuestDelete(guestid string) (int, []byte) {
-        var buffer bytes.Buffer
+func GuestDelete(endpoint string, guestid string) (int, []byte) {
 
-        buffer.WriteString("http://localhost:8080/guests/")
+	buffer := getEndpointwithGuests(endpoint)
+	buffer.WriteString("/")
         buffer.WriteString(guestid)
+
         status, data := delete(buffer.String(), nil)
 
 	return status, data
@@ -120,10 +129,10 @@ func buildGuestDeployRequestJson(image string, vdev string) ([]byte) {
 }
 
 
-func GuestDeploy(guestid string, image string, vdev string) (int, []byte) {
-        var buffer bytes.Buffer
+func GuestDeploy(endpoint string, guestid string, image string, vdev string) (int, []byte) {
 
-        buffer.WriteString("http://localhost:8080/guests/")
+	buffer := getEndpointwithGuests(endpoint)
+	buffer.WriteString("/")
         buffer.WriteString(guestid)
 
 	body := buildGuestDeployRequestJson(image, vdev)
@@ -132,10 +141,10 @@ func GuestDeploy(guestid string, image string, vdev string) (int, []byte) {
         return status, data
 }
 
-func GuestQuery(guestid string) (int, []byte) {
-        var buffer bytes.Buffer
+func GuestQuery(endpoint string, guestid string) (int, []byte) {
 
-        buffer.WriteString("http://localhost:8080/guests/")
+	buffer := getEndpointwithGuests(endpoint)
+	buffer.WriteString("/")
         buffer.WriteString(guestid)
 
         status, data := get(buffer.String())
