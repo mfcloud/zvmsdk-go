@@ -62,7 +62,7 @@ func put(url string, body []byte) (int, []byte) {
 
         client := &http.Client{}
 
-        req, err := http.NewRequest("PUT", url, nil)
+        req, err := http.NewRequest("PUT", url, strings.NewReader(string(body)))
 
         // set content type
         req.Header.Set("Content-Type", "application/json")

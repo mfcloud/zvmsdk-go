@@ -24,19 +24,34 @@ func Test_buildVswitchCreateRequest(t *testing.T) {
 	require.Equal(t, result.Rdev, "rdev1")
 }
 
-func Test_buildVswitchUpdateRequest(t *testing.T) {
-        var vs VswitchUpdateBody
+func Test_buildVswitchGrantRequest(t *testing.T) {
+        var vs VswitchGrantBody
         vs.GrantUserId = "id1"
 
-        data := buildVswitchUpdateRequest(vs)
+        data := buildVswitchGrantRequest(vs)
 
-        result := VswitchUpdateBody{}
+        result := VswitchGrantBody{}
         err := json.Unmarshal(data, &result)
         if err != nil {
                 panic(err.Error())
         }
         require.Equal(t, result.GrantUserId, "id1")
 }
+
+func Test_buildVswitchRevokeRequest(t *testing.T) {
+        var vs VswitchRevokeBody
+        vs.RevokeUserId = "id1"
+
+        data := buildVswitchRevokeRequest(vs)
+
+        result := VswitchRevokeBody{}
+        err := json.Unmarshal(data, &result)
+        if err != nil {
+                panic(err.Error())
+        }
+        require.Equal(t, result.RevokeUserId, "id1")
+}
+
 
 
 func Test_VswitchList(t *testing.T) {
@@ -49,10 +64,19 @@ func Test_VswitchDelete(t *testing.T) {
 	require.Equal(t, status, 200)
 }
 
-func Test_VswitchUpdate(t *testing.T) {
-	var vs VswitchUpdateBody
+func Test_VswitchGrant(t *testing.T) {
+	var vs VswitchGrantBody
 
 	vs.GrantUserId = "id1"
-        status, _ := VswitchUpdate(test_endpoint, "vsw1", vs)
+        status, _ := VswitchGrant(test_endpoint, "vsw1", vs)
         require.Equal(t, status, 200)
 }
+
+func Test_VswitchRevoke(t *testing.T) {
+        var vs VswitchRevokeBody
+
+        vs.RevokeUserId = "id1"
+        status, _ := VswitchRevoke(test_endpoint, "vsw1", vs)
+        require.Equal(t, status, 200)
+}
+

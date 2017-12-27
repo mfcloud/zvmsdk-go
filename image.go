@@ -3,7 +3,6 @@ package zvmsdk
 
 import (
 	"bytes"
-	"encoding/json"
 )
 
 type ImageCreateBody struct {
@@ -28,15 +27,7 @@ func buildImageCreateRequest(image_name string, url string, image_meta map[strin
 	keys := []string{"image_name", "url", "image_meta", "remote_host"}
         values := []interface{}{image_name, url, image_meta, remote_host}
 
-        // map values to keys
-        m := make(map[string]interface{})
-        for i,v := range values {
-                m[keys[i]] = v
-        }
-        // convert map to JSON
-        data, _ := json.Marshal(m)
-
-	return data
+	return buildJson(keys, values)
 }
 
 func ImageCreate(endpoint string, body ImageCreateBody) (int, []byte) {

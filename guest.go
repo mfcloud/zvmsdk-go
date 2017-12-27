@@ -106,21 +106,6 @@ func GuestDelete(endpoint string, guestid string) (int, []byte) {
 	return status, data
 }
 
-func buildJson(keys []string, values []interface{}) ([]byte) {
-        // map values to keys
-        m := make(map[string]interface{})
-
-        for i,v := range values {
-                m[keys[i]] = v
-        }
-
-        // convert map to JSON
-        data, _ := json.Marshal(m)
-
-        return data
-
-}
-
 func buildGuestDeployRequestJson(image string, vdev string) ([]byte) {
         keys := []string{"image", "vdev"}
         values := []interface{}{image, vdev}
