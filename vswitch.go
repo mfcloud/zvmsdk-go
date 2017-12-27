@@ -3,7 +3,6 @@ package zvmsdk
 
 import (
 	"bytes"
-	"encoding/json"
 )
 
 type VswitchCreateBody struct {
@@ -12,8 +11,12 @@ type VswitchCreateBody struct {
 }
 
 
-type VswitchUpdateBody struct {
+type VswitchGrantBody struct {
 	GrantUserId string `json:"grant_userid"`
+}
+
+type VswitchRevokeBody struct {
+	RevokeUserId string `json:"revoke_userid"`
 }
 
 func getEndpointwithVswitchs(endpoint string) (bytes.Buffer) {
@@ -29,15 +32,7 @@ func buildVswitchCreateRequest(body VswitchCreateBody) ([]byte) {
 	keys := []string{"name", "rdev"}
         values := []interface{}{body.Name, body.Rdev}
 
-        // map values to keys
-        m := make(map[string]interface{})
-        for i,v := range values {
-                m[keys[i]] = v
-        }
-        // convert map to JSON
-        data, _ := json.Marshal(m)
-
-	return data
+	return buildJson(keys, values)
 }
 
 func VswitchCreate(endpoint string, body VswitchCreateBody) (int, []byte) {
@@ -69,23 +64,23 @@ func VswitchList(endpoint string) (int, []byte) {
 	return status, data
 }
 
-func buildVswitchUpdateRequest(body VswitchUpdateBody) ([]byte) {
+func buildVswitchGrantRequest(body VswitchGrantBody) ([]byte) {
         keys := []string{"grant_userid"}
         values := []interface{}{body.GrantUserId}
 
-        // map values to keys
-        m := make(map[string]interface{})
-        for i,v := range values {
-                m[keys[i]] = v
-        }
-        // convert map to JSON
-        data, _ := json.Marshal(m)
-
-        return data
+	return buildJson(keys, values)
 }
 
-func VswitchUpdate(endpoint string, name string, body VswitchUpdateBody) (int, []byte) {
-	bodyJson := buildVswitchUpdateRequest(body)
+func buildVswitchRevokeRequest(body VswitchRevokeBody) ([]byte) {
+        keys := []string{"revoke_userid"}
+        values := []interface{}{body.RevokeUserId}
+
+	return buildJson(keys, values)
+}
+
+
+func VswitchGrant(endpoint string, name string, body VswitchGrantBody) (int, []byte) {
+	bodyJson := buildVswitchGrantRequest(body)
 
 	buffer := getEndpointwithVswitchs(endpoint)
 	buffer.WriteString("/")
@@ -95,3 +90,17 @@ func VswitchUpdate(endpoint string, name string, body VswitchUpdateBody) (int, [
 
 	return status, data
 }
+
+
+func VswitchRevoke(endpoint string, name string, body VswitchRevokeBody) (int, []byte) {
+        bodyJson := buildVswitchRevokeRequest(body)
+
+        buffer := getEndpointwithVswitchs(endpoint)
+        buffer.WriteString("/")
+        buffer.WriteString(name)
+
+        status, data := put(buffer.String(), bodyJson)
+
+        return status, data
+}
+
