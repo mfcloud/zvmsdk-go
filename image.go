@@ -20,8 +20,6 @@ func getEndpointwithImages(endpoint string) (bytes.Buffer) {
         return buffer
 }
 
-
-
 func buildImageCreateRequest(image_name string, url string, image_meta map[string]string,
 			     remote_host string) ([]byte) {
 	keys := []string{"image_name", "url", "image_meta", "remote_host"}

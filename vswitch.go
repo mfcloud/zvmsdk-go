@@ -86,7 +86,12 @@ func VswitchGrant(endpoint string, name string, body VswitchGrantBody) (int, []b
 	buffer.WriteString("/")
 	buffer.WriteString(name)
 
-        status, data := put(buffer.String(), bodyJson)
+	headers := buildAuthContext("abc")
+	ctxt := RequestContext{
+				values: headers,
+	}
+
+        status, data := put(buffer.String(), bodyJson, ctxt)
 
 	return status, data
 }
@@ -99,7 +104,13 @@ func VswitchRevoke(endpoint string, name string, body VswitchRevokeBody) (int, [
         buffer.WriteString("/")
         buffer.WriteString(name)
 
-        status, data := put(buffer.String(), bodyJson)
+        headers := buildAuthContext("bcd")
+        ctxt := RequestContext{
+                                values: headers,
+        }
+
+
+        status, data := put(buffer.String(), bodyJson, ctxt)
 
         return status, data
 }

@@ -8,6 +8,9 @@ import (
 )
 
 
+type RequestContext struct {
+	values map[string]string
+}
 
 func get(url string) (int, []byte) {
         var s []byte = make([]byte, 1)
@@ -57,7 +60,7 @@ func post(url string, body []byte) (int, []byte) {
         return resp.StatusCode, result
 }
 
-func put(url string, body []byte) (int, []byte) {
+func put(url string, body []byte, context RequestContext) (int, []byte) {
         var s []byte = make([]byte, 1)
 
         client := &http.Client{}
@@ -66,6 +69,9 @@ func put(url string, body []byte) (int, []byte) {
 
         // set content type
         req.Header.Set("Content-Type", "application/json")
+        for i,v := range context.values {
+                req.Header.Set(i, v)
+        }
 
         resp, err := client.Do(req)
 

@@ -18,3 +18,19 @@ func buildJson(keys []string, values []interface{}) ([]byte) {
 
         return data
 }
+
+
+func buildAuthContext(authToken string) (map[string]string) {
+	m := make(map[string]string)
+
+	m["X-Auth-Token"] = authToken
+	return m
+}
+
+func buildAdminContext(adminToken string) (map[string]string) {
+        m := make(map[string]string)
+
+        m["X-Admin-Token"] = adminToken
+        return m
+}
+
