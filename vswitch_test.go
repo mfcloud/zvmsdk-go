@@ -80,3 +80,8 @@ func Test_VswitchRevoke(t *testing.T) {
         require.Equal(t, status, 200)
 }
 
+func Test_VswitchGet(t *testing.T) {
+        status, _ := VswitchGet(test_endpoint, "vsw1")
+        require.Equal(t, status, 200)
+}
+

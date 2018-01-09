@@ -115,3 +115,11 @@ func VswitchRevoke(endpoint string, name string, body VswitchRevokeBody) (int, [
         return status, data
 }
 
+func VswitchGet(endpoint string, name string) (int, []byte) {
+        buffer := getEndpointwithVswitchs(endpoint)
+        buffer.WriteString("/")
+        buffer.WriteString(name)
+        status, data := get(buffer.String())
+
+        return status, data
+}
