@@ -88,7 +88,7 @@ func VswitchGrant(endpoint string, name string, body VswitchGrantBody) (int, []b
 
 	headers := buildAuthContext("abc")
 	ctxt := RequestContext{
-				values: headers,
+		values: headers,
 	}
 
         status, data := put(buffer.String(), bodyJson, ctxt)
