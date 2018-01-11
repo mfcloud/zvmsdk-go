@@ -10,7 +10,7 @@ import (
 
 func Test_buildGuestCreateRequestJson(t *testing.T) {
 	disklist := make(GuestCreateDiskStructList, 2)
-	var vs GuestCreateBody
+	var vs GuestCreateBodyStruct
 	vs.Userid = "name1"
 	vs.Vcpus = 1
 	vs.Memory = 32
@@ -29,7 +29,7 @@ func Test_buildGuestCreateRequestJson(t *testing.T) {
 
 	data := buildGuestCreateRequestJson(vs)
 
-	result := GuestCreateBody{}
+	result := GuestCreateBodyStruct{}
 	err := json.Unmarshal(data, &result)
         if err != nil {
 		panic(err.Error())
@@ -69,7 +69,7 @@ func Test_GuestGetPowerState(t *testing.T) {
 
 func Test_GuestCreate(t *testing.T) {
         disklist := make(GuestCreateDiskStructList, 2)
-        var vs GuestCreateBody
+        var vs GuestCreateBodyStruct
         vs.Userid = "name1"
         vs.Vcpus = 1
         vs.Memory = 32
@@ -104,7 +104,7 @@ func Test_GuestCreateDisk(t *testing.T) {
 
 
 func Test_GuestDeleteDisk(t *testing.T) {
-        body := GuestDeleteDiskBody{}
+        body := GuestDeleteDiskBodyStruct{}
 	body.VdevList = make([]string, 2)
 	body.VdevList[0] = "123"
 	body.VdevList[1] = "456"
@@ -112,3 +112,33 @@ func Test_GuestDeleteDisk(t *testing.T) {
         status, _ := GuestDeleteDisks(test_endpoint, "name1", body)
 	require.Equal(t, status, 200)
 }
+
+func Test_GuestConfigDisk(t *testing.T) {
+        disklist := make(GuestConfigDiskStructList, 2)
+
+        disklist[0].Vdev = "1111"
+        disklist[0].Format = "ECKD"
+        disklist[0].MntDir = "/mnt1"
+        disklist[1].Vdev = "2222"
+        disklist[1].Format = "FBA"
+        disklist[1].MntDir = "/mnt/abc"
+
+        status, _ := GuestConfigDisks(test_endpoint, "name1", disklist)
+        require.Equal(t, status, 200)
+}
+
+func Test_GuestGetNics(t *testing.T) {
+        status, _ := GuestsGetNics(test_endpoint)
+        require.Equal(t, status, 200)
+}
+
+func Test_GuestGetVnics(t *testing.T) {
+        status, _ := GuestsGetVnics(test_endpoint)
+        require.Equal(t, status, 200)
+}
+
+func Test_GuestGetStats(t *testing.T) {
+        status, _ := GuestsGetStats(test_endpoint)
+        require.Equal(t, status, 200)
+}
+
