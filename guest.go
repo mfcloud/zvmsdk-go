@@ -30,6 +30,13 @@ type GuestDeleteDiskBody struct {
 	VdevList GuestDeleteVdevList `json:"vdev_list"`
 }
 
+type GuestCreateNicBody struct {
+        Vdev string `json:"vdev"`
+        NicID string `json:"nic_id"`
+        MacAddr string `json:"mac_addr"`
+	Active bool `json:"active"`
+}
+
 func getEndpointwithGuests(endpoint string) (bytes.Buffer) {
         var buffer bytes.Buffer
 
@@ -89,6 +96,13 @@ func buildGuestDeleteDiskRequest(body GuestDeleteDiskBody) ([]byte) {
         return buildJson(keys, values)
 }
 
+
+func buildGuestCreateNicRequestJson(body GuestCreateNicBody) ([]byte) {
+        keys := []string{"vdev", "nic_id", "mac_addr", "active"}
+        values := []interface{}{body.Vdev, body.NicID, body.MacAddr, body.Active}
+
+        return buildJson(keys, values)
+}
 
 
 func GuestCreate(endpoint string, body GuestCreateBody) (int, []byte) {
@@ -163,6 +177,33 @@ func GuestGetInfo(endpoint string, guestid string) (int, []byte) {
 
         return status, data
 }
+
+func GuestGetNic(endpoint string, guestid string) (int, []byte) {
+
+        buffer := getEndpointwithGuests(endpoint)
+        buffer.WriteString("/")
+        buffer.WriteString(guestid)
+        buffer.WriteString("/nic")
+
+        status, data := get(buffer.String())
+
+        return status, data
+}
+
+func GuestCreateNic(endpoint string, guestid string, body GuestCreateNicBody) (int, []byte) {
+
+        createJson := buildGuestCreateNicRequestJson(body)
+
+        buffer := getEndpointwithGuests(endpoint)
+        buffer.WriteString("/")
+        buffer.WriteString(guestid)
+        buffer.WriteString("/nic")
+
+        status, data := post(buffer.String(), createJson)
+
+        return status, data
+}
+
 
 func GuestGetPowerState(endpoint string, guestid string) (int, []byte) {
 
