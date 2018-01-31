@@ -7,13 +7,13 @@ import (
 	"io/ioutil"
 )
 
-
+// RequestContext used as http request context
 type RequestContext struct {
 	values map[string]string
 }
 
 func get(url string) (int, []byte) {
-        var s []byte = make([]byte, 1)
+        s := make([]byte, 1)
 
 	client := &http.Client{}
 
@@ -35,7 +35,7 @@ func get(url string) (int, []byte) {
 }
 
 func post(url string, body []byte) (int, []byte) {
-        var s []byte = make([]byte, 1)
+        s := make([]byte, 1)
 
 	client := &http.Client{}
 
@@ -61,7 +61,7 @@ func post(url string, body []byte) (int, []byte) {
 }
 
 func put(url string, body []byte, context RequestContext) (int, []byte) {
-        var s []byte = make([]byte, 1)
+        s := make([]byte, 1)
 
         client := &http.Client{}
 
@@ -91,7 +91,7 @@ func put(url string, body []byte, context RequestContext) (int, []byte) {
 
 
 func delete(url string, body []byte) (int, []byte){
-        var s []byte = make([]byte, 1)
+        s := make([]byte, 1)
 
         client := &http.Client{}
 

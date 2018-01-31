@@ -8,7 +8,7 @@ import (
 
 func Test_VersionGet(t *testing.T) {
 
-	status, _ := VersionGet(test_endpoint)
+	status, _ := VersionGet(testEndpoint)
 
 	require.Equal(t, status, 200)
 }

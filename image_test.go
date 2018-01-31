@@ -18,24 +18,24 @@ func Test_buildImageCreateRequest(t *testing.T) {
 		panic(err.Error())
 	}
 	require.Equal(t, s.Name, "name")
-	require.Equal(t, s.Url, "url")
+	require.Equal(t, s.URL, "url")
 	require.Equal(t, s.RemoteHost, "host")
 	require.Equal(t, s.Meta["apple"], "5")
 	require.Equal(t, s.Meta["lettuce"], "7")
 }
 
 func Test_ImageGetRootDiskSize(t *testing.T) {
-        status, _ := ImageGetRootDiskSize(test_endpoint, "image1")
+        status, _ := ImageGetRootDiskSize(testEndpoint, "image1")
         require.Equal(t, status, 200)
 }
 
 func Test_ImageGetWithName(t *testing.T) {
-        status, _ := ImageGet(test_endpoint, "image1")
+        status, _ := ImageGet(testEndpoint, "image1")
         require.Equal(t, status, 200)
 }
 
 func Test_ImageGet(t *testing.T) {
-        status, _ := ImageGet(test_endpoint, "")
+        status, _ := ImageGet(testEndpoint, "")
         require.Equal(t, status, 200)
 }
 
@@ -47,7 +47,7 @@ func Test_buildImageUpdateRequest(t *testing.T) {
         if err != nil {
                 panic(err.Error())
         }
-        require.Equal(t, s.DestUrl, "url1")
+        require.Equal(t, s.DestURL, "url1")
         require.Equal(t, s.RemoteHost, "host1")
 }
 
@@ -60,19 +60,19 @@ func Test_ImageCreate(t *testing.T) {
         ic.Name = "name1"
         ic.RemoteHost = "remotehost1"
 	ic.Meta = meta
-	ic.Url = "url1"
+	ic.URL= "url1"
 
-        status, _ := ImageCreate(test_endpoint, ic)
+        status, _ := ImageCreate(testEndpoint, ic)
         require.Equal(t, status, 200)
 }
 
 func Test_ImageUpdate(t *testing.T) {
         var ic ImageUpdateBody
 
-        ic.DestUrl = "url1"
+        ic.DestURL= "url1"
 	ic.RemoteHost = "name1"
 
-        status, _ := ImageUpdate(test_endpoint, "vsw1", ic)
+        status, _ := ImageUpdate(testEndpoint, "vsw1", ic)
         require.Equal(t, status, 200)
 
 }

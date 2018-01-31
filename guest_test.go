@@ -8,7 +8,7 @@ import (
 )
 
 
-func Test_buildGuestCreateRequestJson(t *testing.T) {
+func Test_buildGuestCreateRequestJSON(t *testing.T) {
 	disklist := make(GuestCreateDiskStructList, 2)
 	var vs GuestCreateBodyStruct
 	vs.Userid = "name1"
@@ -27,7 +27,7 @@ func Test_buildGuestCreateRequestJson(t *testing.T) {
 
 	//user_profile is omitted to test optional
 
-	data := buildGuestCreateRequestJson(vs)
+	data := buildGuestCreateRequestJSON(vs)
 
 	result := GuestCreateBodyStruct{}
 	err := json.Unmarshal(data, &result)
@@ -41,28 +41,28 @@ func Test_buildGuestCreateRequestJson(t *testing.T) {
 
 func Test_GuestList(t *testing.T) {
         //FIXME: mock this later
-        status, _ := GuestList(test_endpoint)
+        status, _ := GuestList(testEndpoint)
         require.Equal(t, status, 200)
 }
 
 func Test_GuestGet(t *testing.T) {
 	name := "name1"
 
-        status, _ := GuestGet(test_endpoint, name)
+        status, _ := GuestGet(testEndpoint, name)
         require.Equal(t, status, 200)
 }
 
 func Test_GuestGetInfo(t *testing.T) {
         name := "name1"
 
-        status, _ := GuestGetInfo(test_endpoint, name)
+        status, _ := GuestGetInfo(testEndpoint, name)
         require.Equal(t, status, 200)
 }
 
 func Test_GuestGetPowerState(t *testing.T) {
         name := "name1"
 
-        status, _ := GuestGetPowerState(test_endpoint, name)
+        status, _ := GuestGetPowerState(testEndpoint, name)
         require.Equal(t, status, 200)}
 
 
@@ -84,7 +84,7 @@ func Test_GuestCreate(t *testing.T) {
 
         vs.DiskList = disklist
 
-        status, _ := GuestCreate(test_endpoint, vs)
+        status, _ := GuestCreate(testEndpoint, vs)
 	require.Equal(t, status, 200)
 }
 
@@ -95,14 +95,14 @@ func Test_GuestCreateNic(t *testing.T) {
         vs.MacAddr = "addr1"
         vs.Active = true
 
-        status, _ := GuestCreateNic(test_endpoint, "name1", vs)
+        status, _ := GuestCreateNic(testEndpoint, "name1", vs)
         require.Equal(t, status, 200)
 }
 
 func Test_GuestGetNic(t *testing.T) {
         name := "name1"
 
-        status, _ := GuestGetNic(test_endpoint, name)
+        status, _ := GuestGetNic(testEndpoint, name)
         require.Equal(t, status, 200)
 }
 
@@ -118,7 +118,7 @@ func Test_GuestCreateDisk(t *testing.T) {
         disklist[1].Format = "FBA"
         disklist[1].Boot = 0
 
-        status, _ := GuestCreateDisks(test_endpoint, "name1", disklist)
+        status, _ := GuestCreateDisks(testEndpoint, "name1", disklist)
         require.Equal(t, status, 200)
 }
 
@@ -129,7 +129,7 @@ func Test_GuestDeleteDisk(t *testing.T) {
 	body.VdevList[0] = "123"
 	body.VdevList[1] = "456"
 
-        status, _ := GuestDeleteDisks(test_endpoint, "name1", body)
+        status, _ := GuestDeleteDisks(testEndpoint, "name1", body)
 	require.Equal(t, status, 200)
 }
 
@@ -143,22 +143,22 @@ func Test_GuestConfigDisk(t *testing.T) {
         disklist[1].Format = "FBA"
         disklist[1].MntDir = "/mnt/abc"
 
-        status, _ := GuestConfigDisks(test_endpoint, "name1", disklist)
+        status, _ := GuestConfigDisks(testEndpoint, "name1", disklist)
         require.Equal(t, status, 200)
 }
 
 func Test_GuestGetNics(t *testing.T) {
-        status, _ := GuestsGetNics(test_endpoint)
+        status, _ := GuestsGetNics(testEndpoint)
         require.Equal(t, status, 200)
 }
 
 func Test_GuestGetVnics(t *testing.T) {
-        status, _ := GuestsGetVnics(test_endpoint)
+        status, _ := GuestsGetVnics(testEndpoint)
         require.Equal(t, status, 200)
 }
 
 func Test_GuestGetStats(t *testing.T) {
-        status, _ := GuestsGetStats(test_endpoint)
+        status, _ := GuestsGetStats(testEndpoint)
         require.Equal(t, status, 200)
 }
 

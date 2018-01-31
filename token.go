@@ -5,8 +5,9 @@ import (
 )
 
 
+// TokenCreateBody is used for generating a token
 type TokenCreateBody struct {
-	admin_token string
+	adminToken string
 }
 
 func getEndpointwithToken(endpoint string) (bytes.Buffer) {
@@ -17,6 +18,7 @@ func getEndpointwithToken(endpoint string) (bytes.Buffer) {
         return buffer
 }
 
+// TokenCreate creates a token with admin token
 func TokenCreate(endpoint string, body TokenCreateBody) (int, []byte) {
 	buffer := getEndpointwithToken(endpoint)
 

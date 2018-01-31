@@ -6,7 +6,7 @@ import (
 )
 
 
-func buildJson(keys []string, values []interface{}) ([]byte) {
+func buildJSON(keys []string, values []interface{}) ([]byte) {
 
         // map values to keys
         m := make(map[string]interface{})

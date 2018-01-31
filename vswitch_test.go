@@ -26,7 +26,7 @@ func Test_buildVswitchCreateRequest(t *testing.T) {
 
 func Test_buildVswitchGrantRequest(t *testing.T) {
         var vs VswitchGrantBody
-        vs.GrantUserId = "id1"
+        vs.GrantUserID = "id1"
 
         data := buildVswitchGrantRequest(vs)
 
@@ -35,12 +35,12 @@ func Test_buildVswitchGrantRequest(t *testing.T) {
         if err != nil {
                 panic(err.Error())
         }
-        require.Equal(t, result.GrantUserId, "id1")
+        require.Equal(t, result.GrantUserID, "id1")
 }
 
 func Test_buildVswitchRevokeRequest(t *testing.T) {
         var vs VswitchRevokeBody
-        vs.RevokeUserId = "id1"
+        vs.RevokeUserID = "id1"
 
         data := buildVswitchRevokeRequest(vs)
 
@@ -49,39 +49,39 @@ func Test_buildVswitchRevokeRequest(t *testing.T) {
         if err != nil {
                 panic(err.Error())
         }
-        require.Equal(t, result.RevokeUserId, "id1")
+        require.Equal(t, result.RevokeUserID, "id1")
 }
 
 
 
 func Test_VswitchList(t *testing.T) {
-	status, _ := VswitchList(test_endpoint)
+	status, _ := VswitchList(testEndpoint)
 	require.Equal(t, status, 200)
 }
 
 func Test_VswitchDelete(t *testing.T) {
-	status, _ := VswitchDelete(test_endpoint, "id1")
+	status, _ := VswitchDelete(testEndpoint, "id1")
 	require.Equal(t, status, 200)
 }
 
 func Test_VswitchGrant(t *testing.T) {
 	var vs VswitchGrantBody
 
-	vs.GrantUserId = "id1"
-        status, _ := VswitchGrant(test_endpoint, "vsw1", vs)
+	vs.GrantUserID = "id1"
+        status, _ := VswitchGrant(testEndpoint, "vsw1", vs)
         require.Equal(t, status, 200)
 }
 
 func Test_VswitchRevoke(t *testing.T) {
         var vs VswitchRevokeBody
 
-        vs.RevokeUserId = "id1"
-        status, _ := VswitchRevoke(test_endpoint, "vsw1", vs)
+        vs.RevokeUserID = "id1"
+        status, _ := VswitchRevoke(testEndpoint, "vsw1", vs)
         require.Equal(t, status, 200)
 }
 
 func Test_VswitchGet(t *testing.T) {
-        status, _ := VswitchGet(test_endpoint, "vsw1")
+        status, _ := VswitchGet(testEndpoint, "vsw1")
         require.Equal(t, status, 200)
 }
 

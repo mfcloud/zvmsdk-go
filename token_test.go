@@ -9,7 +9,7 @@ import (
 func Test_TokenCreate(t *testing.T) {
 	var v TokenCreateBody
 
-	status, _ := TokenCreate(test_endpoint, v)
+	status, _ := TokenCreate(testEndpoint, v)
 
 	require.Equal(t, status, 200)
 }

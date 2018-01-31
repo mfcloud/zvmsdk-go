@@ -1,5 +1,5 @@
 package zvmsdk
 
 
-const test_endpoint string = "http://localhost:8080"
+const testEndpoint string = "http://localhost:8081"
 

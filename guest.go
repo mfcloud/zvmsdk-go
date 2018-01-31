@@ -7,22 +7,32 @@ import (
 )
 
 
+// GuestCreateDiskStruct will be used by upper layer
+// when calling guest create disk function
 type GuestCreateDiskStruct struct {
 	Size string `json:"size"`
 	Format string `json:"format"`
 	Boot int32 `json:"is_boot_disk"`
 }
 
+// GuestCreateDiskStructList will be used by upper layer
+// when calling guest create disk function
 type GuestCreateDiskStructList []GuestCreateDiskStruct
 
+// GuestConfigDiskStruct will be used by upper layer when
+// calling guest create disk function
 type GuestConfigDiskStruct struct {
         Vdev string `json:"vdev"`
         Format string `json:"format"`
         MntDir string `json:"mntdir"`
 }
 
+// GuestConfigDiskStructList will be used by upper layer
+// when calling guest create disk function
 type GuestConfigDiskStructList []GuestConfigDiskStruct
 
+// GuestCreateBodyStruct will be used by upper layer
+// when calling guest create function
 type GuestCreateBodyStruct struct {
 	Userid string `json:"userid"`
 	Vcpus int `json:"vcpus"`
@@ -32,12 +42,18 @@ type GuestCreateBodyStruct struct {
 	UserProfile string `json:"user_profile"`
 }
 
+// GuestDeleteVdevList will be used by upper layer
+// when calling guest delete disk function
 type GuestDeleteVdevList []string
 
+// GuestDeleteDiskBodyStruct will be used by upper layer
+// calling guest delete disk function
 type GuestDeleteDiskBodyStruct struct {
 	VdevList GuestDeleteVdevList `json:"vdev_list"`
 }
 
+// GuestCreateNicBody will be used by upper layer when calling
+// guest create nic function
 type GuestCreateNicBody struct {
         Vdev string `json:"vdev"`
         NicID string `json:"nic_id"`
@@ -53,7 +69,7 @@ func getEndpointwithGuests(endpoint string) (bytes.Buffer) {
         return buffer
 }
 
-func buildGuestCreateDiskListJson(disklist GuestCreateDiskStructList) ([]map[string]interface{}) {
+func buildGuestCreateDiskListJSON(disklist GuestCreateDiskStructList) ([]map[string]interface{}) {
 	length := len(disklist)
 
 	ret := make([]map[string]interface{}, length)
@@ -71,12 +87,12 @@ func buildGuestCreateDiskListJson(disklist GuestCreateDiskStructList) ([]map[str
 }
 
 
-func buildGuestCreateRequestJson(body GuestCreateBodyStruct) ([]byte) {
+func buildGuestCreateRequestJSON(body GuestCreateBodyStruct) ([]byte) {
 	mkeys := []string{"userid", "vcpus", "memory", "user_profile", "disk_pool"}
         mvalues := []interface{}{body.Userid, body.Vcpus, body.Memory, body.UserProfile, body.DiskPool}
 
         okeys := []string{"disk_list"}
-	disklist := buildGuestCreateDiskListJson(body.DiskList)
+	disklist := buildGuestCreateDiskListJSON(body.DiskList)
         ovalues := []interface{}{disklist}
 
         // map values to keys
@@ -100,7 +116,7 @@ func buildGuestDeleteDiskRequest(body GuestDeleteDiskBodyStruct) ([]byte) {
         keys := []string{"vdev_list"}
         values := []interface{}{body.VdevList}
 
-        return buildJson(keys, values)
+        return buildJSON(keys, values)
 }
 
 func buildGuestConfigDiskRequest(disklist GuestConfigDiskStructList) ([]byte) {
@@ -122,24 +138,25 @@ func buildGuestConfigDiskRequest(disklist GuestConfigDiskStructList) ([]byte) {
         return data
 }
 
-func buildGuestCreateNicRequestJson(body GuestCreateNicBody) ([]byte) {
+func buildGuestCreateNicRequestJSON(body GuestCreateNicBody) ([]byte) {
         keys := []string{"vdev", "nic_id", "mac_addr", "active"}
         values := []interface{}{body.Vdev, body.NicID, body.MacAddr, body.Active}
 
-        return buildJson(keys, values)
+        return buildJSON(keys, values)
 }
 
-
+// GuestCreate creates a guest
 func GuestCreate(endpoint string, body GuestCreateBodyStruct) (int, []byte) {
 
-	createJson := buildGuestCreateRequestJson(body)
+	createJSON := buildGuestCreateRequestJSON(body)
 
 	buffer := getEndpointwithGuests(endpoint)
-	status, data := post(buffer.String(), createJson)
+	status, data := post(buffer.String(), createJSON)
 
 	return status, data
 }
 
+// GuestList lists the guests on the host (z/VM)
 func GuestList(endpoint string) (int, []byte) {
 
 	buffer := getEndpointwithGuests(endpoint)
@@ -148,7 +165,7 @@ func GuestList(endpoint string) (int, []byte) {
         return status, data
 }
 
-
+// GuestDelete deletes a guest
 func GuestDelete(endpoint string, guestid string) (int, []byte) {
 
 	buffer := getEndpointwithGuests(endpoint)
@@ -160,26 +177,27 @@ func GuestDelete(endpoint string, guestid string) (int, []byte) {
 	return status, data
 }
 
-func buildGuestDeployRequestJson(image string, vdev string) ([]byte) {
+func buildGuestDeployRequestJSON(image string, vdev string) ([]byte) {
         keys := []string{"image", "vdev"}
         values := []interface{}{image, vdev}
 
-	return buildJson(keys, values)
+	return buildJSON(keys, values)
 }
 
-
+// GuestDeploy deploy an image to a given guest
 func GuestDeploy(endpoint string, guestid string, image string, vdev string) (int, []byte) {
 
 	buffer := getEndpointwithGuests(endpoint)
 	buffer.WriteString("/")
         buffer.WriteString(guestid)
 
-	body := buildGuestDeployRequestJson(image, vdev)
+	body := buildGuestDeployRequestJSON(image, vdev)
         status, data := post(buffer.String(), body)
 
         return status, data
 }
 
+// GuestGet retrieves user directory definition from a guest
 func GuestGet(endpoint string, guestid string) (int, []byte) {
 
 	buffer := getEndpointwithGuests(endpoint)
@@ -191,6 +209,7 @@ func GuestGet(endpoint string, guestid string) (int, []byte) {
         return status, data
 }
 
+// GuestGetInfo gets information from guest
 func GuestGetInfo(endpoint string, guestid string) (int, []byte) {
 
         buffer := getEndpointwithGuests(endpoint)
@@ -203,6 +222,7 @@ func GuestGetInfo(endpoint string, guestid string) (int, []byte) {
         return status, data
 }
 
+// GuestGetNic gets NIC information
 func GuestGetNic(endpoint string, guestid string) (int, []byte) {
 
         buffer := getEndpointwithGuests(endpoint)
@@ -215,21 +235,22 @@ func GuestGetNic(endpoint string, guestid string) (int, []byte) {
         return status, data
 }
 
+// GuestCreateNic create NIC
 func GuestCreateNic(endpoint string, guestid string, body GuestCreateNicBody) (int, []byte) {
 
-        createJson := buildGuestCreateNicRequestJson(body)
+        createJSON := buildGuestCreateNicRequestJSON(body)
 
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/")
         buffer.WriteString(guestid)
         buffer.WriteString("/nic")
 
-        status, data := post(buffer.String(), createJson)
+        status, data := post(buffer.String(), createJSON)
 
         return status, data
 }
 
-
+// GuestGetPowerState gets power state of a guest
 func GuestGetPowerState(endpoint string, guestid string) (int, []byte) {
 
         buffer := getEndpointwithGuests(endpoint)
@@ -242,9 +263,10 @@ func GuestGetPowerState(endpoint string, guestid string) (int, []byte) {
         return status, data
 }
 
+// GuestCreateDisks creates disk(s) on a given guest
 func GuestCreateDisks(endpoint string, guestid string, body GuestCreateDiskStructList) (int, []byte) {
 
-	createReq, _ := json.Marshal(buildGuestCreateDiskListJson(body))
+	createReq, _ := json.Marshal(buildGuestCreateDiskListJSON(body))
 
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/")
@@ -256,6 +278,7 @@ func GuestCreateDisks(endpoint string, guestid string, body GuestCreateDiskStruc
         return status, data
 }
 
+// GuestDeleteDisks deletes disk(s) from a guest
 func GuestDeleteDisks(endpoint string, guestid string, body GuestDeleteDiskBodyStruct) (int, []byte) {
         deleteReq, _ := json.Marshal(buildGuestDeleteDiskRequest(body))
 
@@ -269,6 +292,7 @@ func GuestDeleteDisks(endpoint string, guestid string, body GuestDeleteDiskBodyS
         return status, data
 }
 
+// GuestConfigDisks configure disks on a guest
 func GuestConfigDisks(endpoint string, guestid string, body GuestConfigDiskStructList) (int, []byte) {
 	putReq := buildGuestConfigDiskRequest(body)
 
@@ -287,6 +311,7 @@ func GuestConfigDisks(endpoint string, guestid string, body GuestConfigDiskStruc
         return status, data
 }
 
+// GuestsGetNics gets NIC info from guest
 func GuestsGetNics(endpoint string) (int, []byte) {
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/nics")
@@ -296,6 +321,7 @@ func GuestsGetNics(endpoint string) (int, []byte) {
         return status, data
 }
 
+// GuestsGetVnics get VNIC information from all guests
 func GuestsGetVnics(endpoint string) (int, []byte) {
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/vnicsinfo")
@@ -305,6 +331,7 @@ func GuestsGetVnics(endpoint string) (int, []byte) {
         return status, data
 }
 
+// GuestsGetStats get stats from all guests
 func GuestsGetStats(endpoint string) (int, []byte) {
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/stats")
@@ -313,7 +340,3 @@ func GuestsGetStats(endpoint string) (int, []byte) {
 
         return status, data
 }
-
-
-
-
