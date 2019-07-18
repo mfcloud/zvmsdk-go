@@ -7,48 +7,49 @@ import (
 )
 
 
-// GuestCreateDiskStruct will be used by upper layer
+// GuestCreateDisk will be used by upper layer
 // when calling guest create disk function
-type GuestCreateDiskStruct struct {
-	Size string `json:"size"`
-	Format string `json:"format"`
-	Boot int32 `json:"is_boot_disk"`
+type GuestCreateDisk struct {
+	Size string `json:"size,omitempty"`
+	Format string `json:"format,omitempty"`
+	Boot int32 `json:"is_boot_disk,omitempty"`
 }
 
-// GuestCreateDiskStructList will be used by upper layer
+// GuestCreateDiskList will be used by upper layer
 // when calling guest create disk function
-type GuestCreateDiskStructList []GuestCreateDiskStruct
+type GuestCreateDiskList []GuestCreateDisk
 
-// GuestConfigDiskStruct will be used by upper layer when
+// GuestConfigDisk will be used by upper layer when
 // calling guest create disk function
-type GuestConfigDiskStruct struct {
+type GuestConfigDisk struct {
         Vdev string `json:"vdev"`
         Format string `json:"format"`
         MntDir string `json:"mntdir"`
 }
 
-// GuestConfigDiskStructList will be used by upper layer
+// GuestConfigDiskList will be used by upper layer
 // when calling guest create disk function
-type GuestConfigDiskStructList []GuestConfigDiskStruct
+type GuestConfigDiskList []GuestConfigDisk
 
-// GuestCreateBodyStruct will be used by upper layer
+// GuestCreateBody will be used by upper layer
 // when calling guest create function
-type GuestCreateBodyStruct struct {
-	Userid string `json:"userid"`
-	Vcpus int `json:"vcpus"`
-	Memory int `json:"memory"`
-	DiskList GuestCreateDiskStructList `json:"disk_list"`
-	DiskPool string `json:"disk_pool"`
-	UserProfile string `json:"user_profile"`
+type GuestCreateBody struct {
+	Userid string `json:"userid,omitempty"`
+	Vcpus int `json:"vcpus,omitempty"`
+	Memory int `json:"memory,omitempty"`
+	DiskList GuestCreateDiskList `json:"disk_list,omitempty"`
+	DiskPool string `json:"disk_pool,omitempty"`
+	UserProfile string `json:"user_profile,omitempty"`
 }
+
 
 // GuestDeleteVdevList will be used by upper layer
 // when calling guest delete disk function
 type GuestDeleteVdevList []string
 
-// GuestDeleteDiskBodyStruct will be used by upper layer
+// GuestDeleteDiskBody will be used by upper layer
 // calling guest delete disk function
-type GuestDeleteDiskBodyStruct struct {
+type GuestDeleteDiskBody struct {
 	VdevList GuestDeleteVdevList `json:"vdev_list"`
 }
 
@@ -69,7 +70,7 @@ func getEndpointwithGuests(endpoint string) (bytes.Buffer) {
         return buffer
 }
 
-func buildGuestCreateDiskListJSON(disklist GuestCreateDiskStructList) ([]map[string]interface{}) {
+func buildGuestCreateDiskListJSON(disklist GuestCreateDiskList) ([]map[string]interface{}) {
 	length := len(disklist)
 
 	ret := make([]map[string]interface{}, length)
@@ -87,7 +88,7 @@ func buildGuestCreateDiskListJSON(disklist GuestCreateDiskStructList) ([]map[str
 }
 
 
-func buildGuestCreateRequestJSON(body GuestCreateBodyStruct) ([]byte) {
+func buildGuestCreateRequestJSON(body GuestCreateBody) ([]byte) {
 	mkeys := []string{"userid", "vcpus", "memory", "user_profile", "disk_pool"}
         mvalues := []interface{}{body.Userid, body.Vcpus, body.Memory, body.UserProfile, body.DiskPool}
 
@@ -112,14 +113,14 @@ func buildGuestCreateRequestJSON(body GuestCreateBodyStruct) ([]byte) {
 	return data
 }
 
-func buildGuestDeleteDiskRequest(body GuestDeleteDiskBodyStruct) ([]byte) {
+func buildGuestDeleteDiskRequest(body GuestDeleteDiskBody) ([]byte) {
         keys := []string{"vdev_list"}
         values := []interface{}{body.VdevList}
 
         return buildJSON(keys, values)
 }
 
-func buildGuestConfigDiskRequest(disklist GuestConfigDiskStructList) ([]byte) {
+func buildGuestConfigDiskRequest(disklist GuestConfigDiskList) ([]byte) {
         length := len(disklist)
 
         ret := make([]map[string]interface{}, length)
@@ -146,7 +147,7 @@ func buildGuestCreateNicRequestJSON(body GuestCreateNicBody) ([]byte) {
 }
 
 // GuestCreate creates a guest
-func GuestCreate(endpoint string, body GuestCreateBodyStruct) (int, []byte) {
+func GuestCreate(endpoint string, body GuestCreateBody) (int, []byte) {
 
 	createJSON := buildGuestCreateRequestJSON(body)
 
@@ -177,21 +178,21 @@ func GuestDelete(endpoint string, guestid string) (int, []byte) {
 	return status, data
 }
 
-func buildGuestDeployRequestJSON(image string, vdev string) ([]byte) {
-        keys := []string{"image", "vdev"}
-        values := []interface{}{image, vdev}
+func buildGuestDeployRequestJSON(action string, image string, vdev string, transportfiles string, remotehost string) ([]byte) {
+        keys := []string{"action", "image", "vdev", "transportfiles", "remotehost"}
+        values := []interface{}{action, image, vdev, transportfiles, remotehost}
 
 	return buildJSON(keys, values)
 }
 
 // GuestDeploy deploy an image to a given guest
-func GuestDeploy(endpoint string, guestid string, image string, vdev string) (int, []byte) {
+func GuestDeploy(endpoint string, guestid string, image string, vdev string, transportfiles string, remotehost string) (int, []byte) {
 
 	buffer := getEndpointwithGuests(endpoint)
 	buffer.WriteString("/")
         buffer.WriteString(guestid)
 
-	body := buildGuestDeployRequestJSON(image, vdev)
+	body := buildGuestDeployRequestJSON("deploy", image, vdev, transportfiles, remotehost)
         status, data := post(buffer.String(), body)
 
         return status, data
@@ -264,7 +265,7 @@ func GuestGetPowerState(endpoint string, guestid string) (int, []byte) {
 }
 
 // GuestCreateDisks creates disk(s) on a given guest
-func GuestCreateDisks(endpoint string, guestid string, body GuestCreateDiskStructList) (int, []byte) {
+func GuestCreateDisks(endpoint string, guestid string, body GuestCreateDiskList) (int, []byte) {
 
 	createReq, _ := json.Marshal(buildGuestCreateDiskListJSON(body))
 
@@ -279,7 +280,7 @@ func GuestCreateDisks(endpoint string, guestid string, body GuestCreateDiskStruc
 }
 
 // GuestDeleteDisks deletes disk(s) from a guest
-func GuestDeleteDisks(endpoint string, guestid string, body GuestDeleteDiskBodyStruct) (int, []byte) {
+func GuestDeleteDisks(endpoint string, guestid string, body GuestDeleteDiskBody) (int, []byte) {
         deleteReq, _ := json.Marshal(buildGuestDeleteDiskRequest(body))
 
         buffer := getEndpointwithGuests(endpoint)
@@ -293,7 +294,7 @@ func GuestDeleteDisks(endpoint string, guestid string, body GuestDeleteDiskBodyS
 }
 
 // GuestConfigDisks configure disks on a guest
-func GuestConfigDisks(endpoint string, guestid string, body GuestConfigDiskStructList) (int, []byte) {
+func GuestConfigDisks(endpoint string, guestid string, body GuestConfigDiskList) (int, []byte) {
 	putReq := buildGuestConfigDiskRequest(body)
 
         buffer := getEndpointwithGuests(endpoint)
