@@ -42,6 +42,15 @@ type GuestCreateBody struct {
 	UserProfile string `json:"user_profile,omitempty"`
 }
 
+// GuestDeployBody will be used by upper layer
+// when calling guest create function
+type GuestDeployBody struct {
+        Userid string `json:"userid,omitempty"`
+	Image string `json:"image,omitempty"`
+	TransportFiles string `json:"transportfiles,omitempty"`
+	RemoteHost string `json:"remotehost,omitempty"`
+	Vdev string `json:"vdev,omitempty"`
+}
 
 // GuestDeleteVdevList will be used by upper layer
 // when calling guest delete disk function
@@ -178,22 +187,22 @@ func GuestDelete(endpoint string, guestid string) (int, []byte) {
 	return status, data
 }
 
-func buildGuestDeployRequestJSON(action string, image string, vdev string, transportfiles string, remotehost string) ([]byte) {
+func buildGuestDeployRequestJSON(action string, body GuestDeployBody) ([]byte) {
         keys := []string{"action", "image", "vdev", "transportfiles", "remotehost"}
-        values := []interface{}{action, image, vdev, transportfiles, remotehost}
+        values := []interface{}{action, body.Image, body.Vdev, body.TransportFiles, body.RemoteHost}
 
 	return buildJSON(keys, values)
 }
 
 // GuestDeploy deploy an image to a given guest
-func GuestDeploy(endpoint string, guestid string, image string, vdev string, transportfiles string, remotehost string) (int, []byte) {
+func GuestDeploy(endpoint string, body GuestDeployBody) (int, []byte) {
 
 	buffer := getEndpointwithGuests(endpoint)
 	buffer.WriteString("/")
-        buffer.WriteString(guestid)
+        buffer.WriteString(body.Userid)
 
-	body := buildGuestDeployRequestJSON("deploy", image, vdev, transportfiles, remotehost)
-        status, data := post(buffer.String(), body)
+	b := buildGuestDeployRequestJSON("deploy", body)
+        status, data := post(buffer.String(), b)
 
         return status, data
 }
