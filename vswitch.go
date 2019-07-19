@@ -34,19 +34,18 @@ func getEndpointwithVswitchs(endpoint string) (bytes.Buffer) {
 }
 
 func buildVswitchCreateRequest(body VswitchCreateBody) ([]byte) {
-	keys := []string{"name", "rdev"}
-        values := []interface{}{body.Name, body.Rdev}
+	data, _ := json.Marshal(body)
 
-	return buildJSON(keys, values)
+        return data
 }
 
 // VswitchCreate is used to create a vswitch
 func VswitchCreate(endpoint string, body VswitchCreateBody) (int, []byte) {
 
-	bodyJSON := buildVswitchCreateRequest(body)
+	b := buildVswitchCreateRequest(body)
 
 	buffer := getEndpointwithVswitchs(endpoint)
-	status, data := post(buffer.String(), bodyJSON)
+	status, data := post(buffer.String(), b)
 
 	return status, data
 }
@@ -72,17 +71,15 @@ func VswitchList(endpoint string) (int, []byte) {
 }
 
 func buildVswitchGrantRequest(body VswitchGrantBody) ([]byte) {
-        keys := []string{"grant_userid"}
-        values := []interface{}{body.GrantUserID}
+	data, _ := json.Marshal(body)
 
-	return buildJSON(keys, values)
+        return data
 }
 
 func buildVswitchRevokeRequest(body VswitchRevokeBody) ([]byte) {
-        keys := []string{"revoke_userid"}
-        values := []interface{}{body.RevokeUserID}
+	data, _ := json.Marshal(body)
 
-	return buildJSON(keys, values)
+        return data
 }
 
 // VswitchGrant is used to grant guest to vswitch

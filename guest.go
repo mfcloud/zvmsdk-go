@@ -45,7 +45,8 @@ type GuestCreateBody struct {
 // GuestDeployBody will be used by upper layer
 // when calling guest create function
 type GuestDeployBody struct {
-        Userid string `json:"userid,omitempty"`
+	Action string `json:"action"`
+        Userid string `json:"userid"`
 	Image string `json:"image,omitempty"`
 	TransportFiles string `json:"transportfiles,omitempty"`
 	RemoteHost string `json:"remotehost,omitempty"`
@@ -79,89 +80,30 @@ func getEndpointwithGuests(endpoint string) (bytes.Buffer) {
         return buffer
 }
 
-func buildGuestCreateDiskListJSON(disklist GuestCreateDiskList) ([]map[string]interface{}) {
-	length := len(disklist)
-
-	ret := make([]map[string]interface{}, length)
-
-	mkeys := []string{"size", "format", "is_boot_disk"}
-
-	for k, element := range disklist {
-		ret[k] = make(map[string]interface{})
-	        ovalues := []interface{}{element.Size, element.Format, element.Boot}
-	        for i,v := range ovalues {
-	                ret[k][mkeys[i]] = v
-	        }
-	}
-	return ret
-}
-
-
-func buildGuestCreateRequestJSON(body GuestCreateBody) ([]byte) {
-	mkeys := []string{"userid", "vcpus", "memory", "user_profile", "disk_pool"}
-        mvalues := []interface{}{body.Userid, body.Vcpus, body.Memory, body.UserProfile, body.DiskPool}
-
-        okeys := []string{"disk_list"}
-	disklist := buildGuestCreateDiskListJSON(body.DiskList)
-        ovalues := []interface{}{disklist}
-
-        // map values to keys
-        m := make(map[string]interface{})
-
-        for i,v := range mvalues {
-                m[mkeys[i]] = v
-        }
-
-	// only non-empty value will be put into map
-	for i, v := range ovalues {
-		m[okeys[i]] = v
-	}
-        // convert map to JSON
-        data, _ := json.Marshal(m)
-
+func buildGuestCreateRequest(body GuestCreateBody) ([]byte) {
+	data, _ := json.Marshal(body)
 	return data
 }
 
-func buildGuestDeleteDiskRequest(body GuestDeleteDiskBody) ([]byte) {
-        keys := []string{"vdev_list"}
-        values := []interface{}{body.VdevList}
-
-        return buildJSON(keys, values)
-}
-
 func buildGuestConfigDiskRequest(disklist GuestConfigDiskList) ([]byte) {
-        length := len(disklist)
-
-        ret := make([]map[string]interface{}, length)
-
-        keys := []string{"vdev", "format", "mntdir"}
-
-        for k, element := range disklist {
-                ret[k] = make(map[string]interface{})
-                ovalues := []interface{}{element.Vdev, element.Format, element.MntDir}
-                for i,v := range ovalues {
-                        ret[k][keys[i]] = v
-                }
-        }
-        data, _ := json.Marshal(ret)
+        data, _ := json.Marshal(disklist)
 
         return data
 }
 
-func buildGuestCreateNicRequestJSON(body GuestCreateNicBody) ([]byte) {
-        keys := []string{"vdev", "nic_id", "mac_addr", "active"}
-        values := []interface{}{body.Vdev, body.NicID, body.MacAddr, body.Active}
+func buildGuestCreateNicRequest(body GuestCreateNicBody) ([]byte) {
+	data, _ := json.Marshal(body)
 
-        return buildJSON(keys, values)
+        return data
 }
 
 // GuestCreate creates a guest
 func GuestCreate(endpoint string, body GuestCreateBody) (int, []byte) {
 
-	createJSON := buildGuestCreateRequestJSON(body)
+	b := buildGuestCreateRequest(body)
 
 	buffer := getEndpointwithGuests(endpoint)
-	status, data := post(buffer.String(), createJSON)
+	status, data := post(buffer.String(), b)
 
 	return status, data
 }
@@ -187,11 +129,9 @@ func GuestDelete(endpoint string, guestid string) (int, []byte) {
 	return status, data
 }
 
-func buildGuestDeployRequestJSON(action string, body GuestDeployBody) ([]byte) {
-        keys := []string{"action", "image", "vdev", "transportfiles", "remotehost"}
-        values := []interface{}{action, body.Image, body.Vdev, body.TransportFiles, body.RemoteHost}
-
-	return buildJSON(keys, values)
+func buildGuestDeployRequest(body GuestDeployBody) ([]byte) {
+	data, _ := json.Marshal(body)
+        return data
 }
 
 // GuestDeploy deploy an image to a given guest
@@ -201,7 +141,8 @@ func GuestDeploy(endpoint string, body GuestDeployBody) (int, []byte) {
 	buffer.WriteString("/")
         buffer.WriteString(body.Userid)
 
-	b := buildGuestDeployRequestJSON("deploy", body)
+	body.Action = "deploy"
+	b := buildGuestDeployRequest(body)
         status, data := post(buffer.String(), b)
 
         return status, data
@@ -248,14 +189,14 @@ func GuestGetNic(endpoint string, guestid string) (int, []byte) {
 // GuestCreateNic create NIC
 func GuestCreateNic(endpoint string, guestid string, body GuestCreateNicBody) (int, []byte) {
 
-        createJSON := buildGuestCreateNicRequestJSON(body)
+        b := buildGuestCreateNicRequest(body)
 
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/")
         buffer.WriteString(guestid)
         buffer.WriteString("/nic")
 
-        status, data := post(buffer.String(), createJSON)
+        status, data := post(buffer.String(), b)
 
         return status, data
 }
@@ -276,7 +217,7 @@ func GuestGetPowerState(endpoint string, guestid string) (int, []byte) {
 // GuestCreateDisks creates disk(s) on a given guest
 func GuestCreateDisks(endpoint string, guestid string, body GuestCreateDiskList) (int, []byte) {
 
-	createReq, _ := json.Marshal(buildGuestCreateDiskListJSON(body))
+	createReq, _ := json.Marshal(body)
 
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/")
@@ -290,7 +231,7 @@ func GuestCreateDisks(endpoint string, guestid string, body GuestCreateDiskList)
 
 // GuestDeleteDisks deletes disk(s) from a guest
 func GuestDeleteDisks(endpoint string, guestid string, body GuestDeleteDiskBody) (int, []byte) {
-        deleteReq, _ := json.Marshal(buildGuestDeleteDiskRequest(body))
+        deleteReq, _ := json.Marshal(body)
 
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/")

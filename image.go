@@ -3,20 +3,21 @@ package zvmsdk
 
 import (
 	"bytes"
+	"encoding/json"
 )
 
 // ImageCreateBody used as image create input param
 type ImageCreateBody struct {
 	Name string `json:"image_name"`
-	RemoteHost string `json:"remote_host"`
-	Meta map[string]string `json:"image_meta"`
+	RemoteHost string `json:"remote_host,omitempty"`
+	Meta map[string]string `json:"image_meta,omitempty"`
 	URL string `json:"url"`
 }
 
 // ImageUpdateBody used as image update input param
 type ImageUpdateBody struct {
 	DestURL string `json:"dest_url"`
-	RemoteHost string `json:"remote_host"`
+	RemoteHost string `json:"remote_host,omitempty"`
 }
 
 
@@ -28,26 +29,22 @@ func getEndpointwithImages(endpoint string) (bytes.Buffer) {
         return buffer
 }
 
-func buildImageCreateRequest(imageName string, url string, imageMeta map[string]string,
-			     remoteHost string) ([]byte) {
-	keys := []string{"image_name", "url", "image_meta", "remote_host"}
-        values := []interface{}{imageName, url, imageMeta, remoteHost}
+func buildImageCreateRequest(body ImageCreateBody) ([]byte) {
+	data, _ := json.Marshal(body)
 
-	return buildJSON(keys, values)
+        return data
 }
 
-func buildImageUpdateRequest(destURL string, remoteHost string) ([]byte) {
-        keys := []string{"dest_url", "remote_host"}
-        values := []interface{}{destURL, remoteHost}
+func buildImageUpdateRequest(body ImageUpdateBody) ([]byte) {
+	data, _ := json.Marshal(body)
 
-        return buildJSON(keys, values)
-
+        return data
 }
 
 // ImageCreate creates an image
 func ImageCreate(endpoint string, body ImageCreateBody) (int, []byte) {
 
-	request := buildImageCreateRequest(body.Name, body.URL, body.Meta, body.RemoteHost)
+	request := buildImageCreateRequest(body)
 
 	buffer := getEndpointwithImages(endpoint)
 	status, data := post(buffer.String(), request)
@@ -81,7 +78,7 @@ func ImageGet(endpoint string, name string) (int, []byte) {
 
 // ImageUpdate updates an image
 func ImageUpdate(endpoint string, name string, body ImageUpdateBody) (int, []byte) {
-        request := buildImageUpdateRequest(body.DestURL, body.RemoteHost)
+        request := buildImageUpdateRequest(body)
 
         buffer := getEndpointwithImages(endpoint)
         buffer.WriteString("/")
