@@ -127,7 +127,6 @@ func buildGuestDeleteDiskRequest(body GuestDeleteDiskBody) ([]byte) {
         values := []interface{}{body.VdevList}
 
         return buildJSON(keys, values)
-}
 
 func buildGuestConfigDiskRequest(disklist GuestConfigDiskList) ([]byte) {
         length := len(disklist)
