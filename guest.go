@@ -34,7 +34,7 @@ type GuestConfigDiskList []GuestConfigDisk
 // GuestCreateBody will be used by upper layer
 // when calling guest create function
 type GuestCreateBody struct {
-	Userid string `json:"userid,omitempty"`
+	Userid string `json:"userid"`
 	Vcpus int `json:"vcpus,omitempty"`
 	Memory int `json:"memory,omitempty"`
 	DiskList GuestCreateDiskList `json:"disk_list,omitempty"`
