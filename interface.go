@@ -23,14 +23,13 @@ type GuestNetworkList []GuestNetwork
 type GuestInterface struct {
 	Osversion string `json:"os_version,omitempty"`
 	Networks GuestNetworkList `json:"guest_networks,omitempty"`
-	
+	Active int `json:"active,omityempty"`
 }
 
 // ImageCreateBody used as image create input param
 type GuestInterfaceCreateBody struct {
 	Userid string `json:"userid"`
 	If GuestInterface `json:"interface"`
-	Active int `json:"active,omityempty"`
 }
 
 func getEndpointwithInterface(endpoint string, userid string) (bytes.Buffer) {
