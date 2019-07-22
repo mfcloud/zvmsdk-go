@@ -18,7 +18,7 @@ type GuestNetwork struct {
 	Dns string `json:"dns_addr,omitempty"`
 }
 
-type GuestNetworkList []Network
+type GuestNetworkList []GuestNetwork
 
 type GuestInterface struct {
 	Osversion string `json:"userid,omitempty"`
