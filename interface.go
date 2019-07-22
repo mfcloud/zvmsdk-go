@@ -28,7 +28,7 @@ type GuestInterface struct {
 // ImageCreateBody used as image create input param
 type GuestInterfaceCreateBody struct {
 	Userid string `json:"userid"`
-	If Interface `json:"interface"`
+	If GuestInterface `json:"interface"`
 }
 
 func getEndpointwithInterface(endpoint string) (bytes.Buffer) {
@@ -47,7 +47,7 @@ func buildInterfaceCreateRequest(body GuestInterfaceCreateBody) ([]byte) {
 
 func GuestInterfaceCreate(endpoint string, body GuestInterfaceCreateBody) (int, []byte) {
 
-	request := buildnterfaceCreateRequest(body)
+	request := buildInterfaceCreateRequest(body)
 
 	buffer := getEndpointwithInterface(endpoint)
 	status, data := post(buffer.String(), request)
