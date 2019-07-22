@@ -21,7 +21,7 @@ type GuestNetwork struct {
 type GuestNetworkList []GuestNetwork
 
 type GuestInterface struct {
-	Osversion string `json:"userid,omitempty"`
+	Osversion string `json:"os_version,omitempty"`
 	Networks GuestNetworkList `json:"guest_networks,omitempty"`
 }
 
