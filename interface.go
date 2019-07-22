@@ -23,19 +23,23 @@ type GuestNetworkList []GuestNetwork
 type GuestInterface struct {
 	Osversion string `json:"os_version,omitempty"`
 	Networks GuestNetworkList `json:"guest_networks,omitempty"`
+	
 }
 
 // ImageCreateBody used as image create input param
 type GuestInterfaceCreateBody struct {
 	Userid string `json:"userid"`
 	If GuestInterface `json:"interface"`
+	Active int `json:"active,omityempty"`
 }
 
-func getEndpointwithInterface(endpoint string) (bytes.Buffer) {
+func getEndpointwithInterface(endpoint string, userid string) (bytes.Buffer) {
         var buffer bytes.Buffer
 
         buffer.WriteString(endpoint)
-        buffer.WriteString("/interface")
+        buffer.WriteString("/guests/")
+	buffer.WriteString(userid)
+	buffer.WriteString("/interface")
         return buffer
 }
 
@@ -49,7 +53,7 @@ func GuestInterfaceCreate(endpoint string, body GuestInterfaceCreateBody) (int, 
 
 	request := buildInterfaceCreateRequest(body)
 
-	buffer := getEndpointwithInterface(endpoint)
+	buffer := getEndpointwithInterface(endpoint, body.Userid)
 	status, data := post(buffer.String(), request)
 
 	return status, data
