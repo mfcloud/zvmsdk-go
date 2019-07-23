@@ -92,7 +92,7 @@ func vswitchGrantCreate(endpoint string, body VswitchGrantCreateBody, ctxt Reque
         return status, data
 }
 	
-func VswitchGrant(endpoint string, name string, body VswitchGrantCreateBody) (int, []byte) {
+func VswitchGrant(endpoint string, body VswitchGrantCreateBody) (int, []byte) {
 	headers := buildAuthContext("")
 	ctxt := RequestContext{
 		values: headers,
