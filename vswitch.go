@@ -14,18 +14,6 @@ type VswitchCreateBody struct {
 	Rdev string `json:"rdev"`
 }
 
-// VswitchGrantBody will be used by upper layer
-// when calling vswitch grant function
-type VswitchGrantBody struct {
-	GrantUserID string `json:"grant_userid"`
-}
-
-// VswitchRevokeBody will be used by upper layer
-// when calling vswitch revoke function
-type VswitchRevokeBody struct {
-	RevokeUserID string `json:"revoke_userid"`
-}
-
 func getEndpointwithVswitchs(endpoint string) (bytes.Buffer) {
         var buffer bytes.Buffer
 
@@ -69,55 +57,6 @@ func VswitchList(endpoint string) (int, []byte) {
 	status, data := get(buffer.String())
 
 	return status, data
-}
-
-func buildVswitchGrantRequest(body VswitchGrantBody) ([]byte) {
-	data, _ := json.Marshal(body)
-
-        return data
-}
-
-func buildVswitchRevokeRequest(body VswitchRevokeBody) ([]byte) {
-	data, _ := json.Marshal(body)
-
-        return data
-}
-
-// VswitchGrant is used to grant guest to vswitch
-func VswitchGrant(endpoint string, name string, body VswitchGrantBody) (int, []byte) {
-	bodyJSON := buildVswitchGrantRequest(body)
-
-	buffer := getEndpointwithVswitchs(endpoint)
-	buffer.WriteString("/")
-	buffer.WriteString(name)
-
-	headers := buildAuthContext("abc")
-	ctxt := RequestContext{
-		values: headers,
-	}
-
-        status, data := put(buffer.String(), bodyJSON, ctxt)
-
-	return status, data
-}
-
-// VswitchRevoke is used to revoke guest from vswitch
-func VswitchRevoke(endpoint string, name string, body VswitchRevokeBody) (int, []byte) {
-        bodyJSON := buildVswitchRevokeRequest(body)
-
-        buffer := getEndpointwithVswitchs(endpoint)
-        buffer.WriteString("/")
-        buffer.WriteString(name)
-
-        headers := buildAuthContext("bcd")
-        ctxt := RequestContext{
-                                values: headers,
-        }
-
-
-        status, data := put(buffer.String(), bodyJSON, ctxt)
-
-        return status, data
 }
 
 // VswitchGet is used to get vswitch info
