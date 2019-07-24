@@ -23,7 +23,7 @@ type GuestNetworkList []GuestNetwork
 type GuestInterface struct {
 	Osversion string `json:"os_version,omitempty"`
 	Networks GuestNetworkList `json:"guest_networks,omitempty"`
-	Active int `json:"active,omityempty"`
+	Active string `json:"active,omityempty"`
 }
 
 // ImageCreateBody used as image create input param
