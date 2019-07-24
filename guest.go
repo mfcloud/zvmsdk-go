@@ -145,14 +145,12 @@ func GuestDeploy(endpoint string, body GuestDeployBody) (int, []byte) {
 	buffer := getEndpointwithGuests(endpoint)
 	buffer.WriteString("/")
         buffer.WriteString(body.Userid)
+	buffer.WriteString("/")
+	buffer.WriteString("action")
 
 	body.Action = "deploy"
 	b := buildGuestDeployRequest(body)
-	headers := buildAuthContext("")
-        ctxt := RequestContext{
-                values: headers,
-        }
-        status, data := put(buffer.String(), b, ctxt)
+        status, data := post(buffer.String(), b)
 
         return status, data
 }
