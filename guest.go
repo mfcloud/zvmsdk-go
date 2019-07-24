@@ -12,7 +12,7 @@ import (
 type GuestCreateDisk struct {
 	Size string `json:"size,omitempty"`
 	Format string `json:"format,omitempty"`
-	Boot int32 `json:"is_boot_disk,omitempty"`
+	Boot string `json:"is_boot_disk,omitempty"`
 }
 
 // GuestCreateDiskList will be used by upper layer
