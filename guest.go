@@ -42,6 +42,10 @@ type GuestCreateBody struct {
 	UserProfile string `json:"user_profile,omitempty"`
 }
 
+type GuestCreateBodyWrapper struct {
+	Guest GuestCreateBody `json:"guest,omitempty"`
+}
+
 // GuestDeployBody will be used by upper layer
 // when calling guest create function
 type GuestDeployBody struct {
@@ -80,7 +84,7 @@ func getEndpointwithGuests(endpoint string) (bytes.Buffer) {
         return buffer
 }
 
-func buildGuestCreateRequest(body GuestCreateBody) ([]byte) {
+func buildGuestCreateRequest(body GuestCreateBodyWrapper) ([]byte) {
 	data, _ := json.Marshal(body)
 	return data
 }
@@ -99,8 +103,9 @@ func buildGuestCreateNicRequest(body GuestCreateNicBody) ([]byte) {
 
 // GuestCreate creates a guest
 func GuestCreate(endpoint string, body GuestCreateBody) (int, []byte) {
-
-	b := buildGuestCreateRequest(body)
+	var gc GuestCreateBodyWrapper
+	gc.Guest = body
+	b := buildGuestCreateRequest(gc)
 
 	buffer := getEndpointwithGuests(endpoint)
 	status, data := post(buffer.String(), b)
