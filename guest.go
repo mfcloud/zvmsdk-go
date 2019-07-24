@@ -50,7 +50,6 @@ type GuestCreateBodyWrapper struct {
 // when calling guest create function
 type GuestDeployBody struct {
 	Action string `json:"action"`
-        Userid string `json:"userid"`
 	Image string `json:"image,omitempty"`
 	TransportFiles string `json:"transportfiles,omitempty"`
 	RemoteHost string `json:"remotehost,omitempty"`
@@ -140,11 +139,11 @@ func buildGuestDeployRequest(body GuestDeployBody) ([]byte) {
 }
 
 // GuestDeploy deploy an image to a given guest
-func GuestDeploy(endpoint string, body GuestDeployBody) (int, []byte) {
+func GuestDeploy(endpoint string, userid string, body GuestDeployBody) (int, []byte) {
 
 	buffer := getEndpointwithGuests(endpoint)
 	buffer.WriteString("/")
-        buffer.WriteString(body.Userid)
+        buffer.WriteString(userid)
 	buffer.WriteString("/")
 	buffer.WriteString("action")
 
