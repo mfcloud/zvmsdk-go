@@ -148,7 +148,11 @@ func GuestDeploy(endpoint string, body GuestDeployBody) (int, []byte) {
 
 	body.Action = "deploy"
 	b := buildGuestDeployRequest(body)
-        status, data := post(buffer.String(), b)
+	headers := buildAuthContext("")
+        ctxt := RequestContext{
+                values: headers,
+        }
+        status, data := put(buffer.String(), b, ctxt)
 
         return status, data
 }
@@ -257,7 +261,7 @@ func GuestConfigDisks(endpoint string, guestid string, body GuestConfigDiskList)
         buffer.WriteString(guestid)
         buffer.WriteString("/disks")
 
-        headers := buildAuthContext("abc")
+        headers := buildAuthContext("")
         ctxt := RequestContext{
                 values: headers,
         }
