@@ -8,8 +8,8 @@ import (
 
 
 type coupleInfo struct {
-	Couple int `json:"couple"`
-	Active int `json:"active"`
+	Couple string `json:"couple"`
+	Active string `json:"active"`
 	Vswitch string `json:"vswitch"`
 }
 
@@ -17,12 +17,12 @@ type coupleBody struct {
 	Info   coupleInfo `json:"info,omitempty"`
 }
 
-type grantVswitch struct {
+type grantUserid struct {
 	Userid string `json:"grant_userid,omitempty"`
 }
 
 type grantBody struct {
-	Vswitch grantVswitch `json:"vswitch,omitempty"`
+	Vswitch grantUserid `json:"vswitch,omitempty"`
 }
 
 // VswitchCreateBody will be used by upper layer
@@ -67,11 +67,12 @@ func buildVswitchCoupleRequest(cb *coupleBody) ([]byte) {
         return data
 }
 
-func vswitchCoupleCreate(endpoint string, body VswitchGrantCreateBody, ctxt RequestContext) (int, []byte) {
+func vswitchCouple(endpoint string, body VswitchGrantCreateBody, ctxt RequestContext) (int, []byte) {
 	var cb coupleBody
 	cb.Info.Vswitch = body.Vswitch
-	cb.Info.Couple = 1
-	
+	cb.Info.Couple = "1"
+	cb.Info.Active = "0"
+
 	b := buildVswitchCoupleRequest(&cb)
 
 	buffer := getEndpointForCouple(endpoint, body.Userid, body.Nic)
@@ -80,7 +81,7 @@ func vswitchCoupleCreate(endpoint string, body VswitchGrantCreateBody, ctxt Requ
 	return status, data
 }
 
-func vswitchGrantCreate(endpoint string, body VswitchGrantCreateBody, ctxt RequestContext) (int, []byte) {
+func vswitchGrant(endpoint string, body VswitchGrantCreateBody, ctxt RequestContext) (int, []byte) {
 	var gb grantBody
         gb.Vswitch.Userid = body.Userid
 
@@ -99,7 +100,7 @@ func VswitchGrant(endpoint string, body VswitchGrantCreateBody) (int, []byte) {
 	}
 
 	// FIXME
-	vswitchCoupleCreate(endpoint, body, ctxt)
-	status, data := vswitchGrantCreate(endpoint, body, ctxt)
+	vswitchCouple(endpoint, body, ctxt)
+	status, data := vswitchGrant(endpoint, body, ctxt)
 	return status, data
 }
