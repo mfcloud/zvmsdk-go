@@ -3,7 +3,7 @@ package zvmsdk
 import (
 	"testing"
 	"github.com/stretchr/testify/require"
-
+	"github.com/stretchr/testify/assert"
 )
 
 var hmock *HttpRequestMock
@@ -56,11 +56,11 @@ func Test_GuestCreate(t *testing.T) {
         disklist[1].Boot = "0"
 
         vs.DiskList = disklist
-
 	hmock.On("Post", "1234").Return(nil)
+	assert := assert.New(t)
 
         status, _ := GuestCreate(testEndpoint, vs)
-	require.Equal(t, 200, status)
+	assert.Equal(200, status)
 }
 
 func Test_GuestCreateDisk(t *testing.T) {
