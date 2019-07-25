@@ -54,24 +54,6 @@ func Test_GuestCreate(t *testing.T) {
 	require.Equal(t, 200, status)
 }
 
-func Test_GuestCreateNic(t *testing.T) {
-        var vs GuestCreateNicBody
-        vs.Vdev = "1111"
-        vs.NicID = "id1"
-        vs.MacAddr = "addr1"
-        vs.Active = true
-
-        status, _ := GuestCreateNic(testEndpoint, "name1", vs)
-        require.Equal(t, 200, status)
-}
-
-func Test_GuestGetNic(t *testing.T) {
-        name := "name1"
-
-        status, _ := GuestGetNic(testEndpoint, name)
-        require.Equal(t, 200, status)
-}
-
 func Test_GuestCreateDisk(t *testing.T) {
 	disklist := make(GuestCreateDiskList, 2)
 
@@ -110,19 +92,3 @@ func Test_GuestConfigDisk(t *testing.T) {
         status, _ := GuestConfigDisks(testEndpoint, "name1", disklist)
         require.Equal(t, 200, status)
 }
-
-func Test_GuestGetNics(t *testing.T) {
-        status, _ := GuestsGetNics(testEndpoint)
-        require.Equal(t, 200, status)
-}
-
-func Test_GuestGetVnics(t *testing.T) {
-        status, _ := GuestsGetVnics(testEndpoint)
-        require.Equal(t, 200, status)
-}
-
-func Test_GuestGetStats(t *testing.T) {
-        status, _ := GuestsGetStats(testEndpoint)
-        require.Equal(t, 200, status)
-}
-

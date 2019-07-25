@@ -17,7 +17,7 @@ func getEndpointwithHost(endpoint string) (bytes.Buffer) {
 // HostInfo gets information for the host (z/VM) running on
 func HostInfo(endpoint string) (int, []byte) {
 	buffer := getEndpointwithHost(endpoint)
-	status, data := get(buffer.String())
+	status, data := hq.Get(buffer.String())
 
 	return status, data
 }
@@ -30,7 +30,7 @@ func HostDiskpoolInfo(endpoint string, disk string) (int, []byte) {
 	buffer.WriteString("/disk/")
         buffer.WriteString(disk)
 
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }

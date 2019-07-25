@@ -107,7 +107,7 @@ func GuestCreate(endpoint string, body GuestCreateBody) (int, []byte) {
 	b := buildGuestCreateRequest(gc)
 
 	buffer := getEndpointwithGuests(endpoint)
-	status, data := post(buffer.String(), b)
+	status, data := hq.Post(buffer.String(), b)
 
 	return status, data
 }
@@ -116,7 +116,7 @@ func GuestCreate(endpoint string, body GuestCreateBody) (int, []byte) {
 func GuestList(endpoint string) (int, []byte) {
 
 	buffer := getEndpointwithGuests(endpoint)
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }
@@ -128,7 +128,7 @@ func GuestDelete(endpoint string, guestid string) (int, []byte) {
 	buffer.WriteString("/")
         buffer.WriteString(guestid)
 
-        status, data := delete(buffer.String(), nil)
+        status, data := hq.Delete(buffer.String(), nil)
 
 	return status, data
 }
@@ -149,7 +149,7 @@ func GuestDeploy(endpoint string, userid string, body GuestDeployBody) (int, []b
 
 	body.Action = "deploy"
 	b := buildGuestDeployRequest(body)
-        status, data := post(buffer.String(), b)
+        status, data := hq.Post(buffer.String(), b)
 
         return status, data
 }
@@ -161,7 +161,7 @@ func GuestGet(endpoint string, guestid string) (int, []byte) {
 	buffer.WriteString("/")
         buffer.WriteString(guestid)
 
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }
@@ -174,7 +174,7 @@ func GuestGetInfo(endpoint string, guestid string) (int, []byte) {
         buffer.WriteString(guestid)
 	buffer.WriteString("/info")
 
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }
@@ -187,35 +187,7 @@ func GuestGetNic(endpoint string, guestid string) (int, []byte) {
         buffer.WriteString(guestid)
         buffer.WriteString("/nic")
 
-        status, data := get(buffer.String())
-
-        return status, data
-}
-
-// GuestCreateNic create NIC
-func GuestCreateNic(endpoint string, guestid string, body GuestCreateNicBody) (int, []byte) {
-
-        b := buildGuestCreateNicRequest(body)
-
-        buffer := getEndpointwithGuests(endpoint)
-        buffer.WriteString("/")
-        buffer.WriteString(guestid)
-        buffer.WriteString("/nic")
-
-        status, data := post(buffer.String(), b)
-
-        return status, data
-}
-
-// GuestGetPowerState gets power state of a guest
-func GuestGetPowerState(endpoint string, guestid string) (int, []byte) {
-
-        buffer := getEndpointwithGuests(endpoint)
-        buffer.WriteString("/")
-        buffer.WriteString(guestid)
-        buffer.WriteString("/power_state")
-
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }
@@ -230,7 +202,7 @@ func GuestCreateDisks(endpoint string, guestid string, body GuestCreateDiskList)
         buffer.WriteString(guestid)
         buffer.WriteString("/disks")
 
-        status, data := post(buffer.String(), createReq)
+        status, data := hq.Post(buffer.String(), createReq)
 
         return status, data
 }
@@ -244,7 +216,7 @@ func GuestDeleteDisks(endpoint string, guestid string, body GuestDeleteDiskBody)
         buffer.WriteString(guestid)
         buffer.WriteString("/disks")
 
-        status, data := delete(buffer.String(), deleteReq)
+        status, data := hq.Delete(buffer.String(), deleteReq)
 
         return status, data
 }
@@ -263,7 +235,7 @@ func GuestConfigDisks(endpoint string, guestid string, body GuestConfigDiskList)
                 values: headers,
         }
 
-        status, data := put(buffer.String(), putReq, ctxt)
+        status, data := hq.Put(buffer.String(), putReq, ctxt)
 
         return status, data
 }
@@ -273,7 +245,7 @@ func GuestsGetNics(endpoint string) (int, []byte) {
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/nics")
 
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }
@@ -283,7 +255,7 @@ func GuestsGetVnics(endpoint string) (int, []byte) {
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/vnicsinfo")
 
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }
@@ -293,7 +265,19 @@ func GuestsGetStats(endpoint string) (int, []byte) {
         buffer := getEndpointwithGuests(endpoint)
         buffer.WriteString("/stats")
 
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
+
+        return status, data
+}
+
+func GuestGetPowerState(endpoint string, guestid string) (int, []byte) {
+
+        buffer := getEndpointwithGuests(endpoint)
+        buffer.WriteString("/")
+        buffer.WriteString(guestid)
+        buffer.WriteString("/power_state")
+
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }

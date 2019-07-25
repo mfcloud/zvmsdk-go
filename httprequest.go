@@ -11,7 +11,17 @@ type RequestContext struct {
 	values map[string]string
 }
 
-func get(url string) (int, []byte) {
+type IHttprequest interface {
+	Get(url string) (int, []byte)
+	Post(url string, body []byte) (int, []byte)
+	Put(url string, body []byte, context RequestContext) (int, []byte)
+	Delete(url string, body []byte) (int, []byte)
+}
+
+type HttpReq struct {
+}
+
+func (h *HttpReq) Get(url string) (int, []byte) {
         s := make([]byte, 1)
 
 	client := &http.Client{}
@@ -33,7 +43,7 @@ func get(url string) (int, []byte) {
         return resp.StatusCode, result
 }
 
-func post(url string, body []byte) (int, []byte) {
+func (h *HttpReq) Post(url string, body []byte) (int, []byte) {
         s := make([]byte, 1)
 
 	client := &http.Client{}
@@ -59,7 +69,7 @@ func post(url string, body []byte) (int, []byte) {
         return resp.StatusCode, result
 }
 
-func put(url string, body []byte, context RequestContext) (int, []byte) {
+func (h *HttpReq) Put(url string, body []byte, context RequestContext) (int, []byte) {
         s := make([]byte, 1)
 
         client := &http.Client{}
@@ -89,7 +99,7 @@ func put(url string, body []byte, context RequestContext) (int, []byte) {
 }
 
 
-func delete(url string, body []byte) (int, []byte){
+func (h *HttpReq) Delete(url string, body []byte) (int, []byte){
         s := make([]byte, 1)
 
         client := &http.Client{}
