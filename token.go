@@ -22,7 +22,7 @@ func getEndpointwithToken(endpoint string) (bytes.Buffer) {
 func TokenCreate(endpoint string, body TokenCreateBody) (int, []byte) {
 	buffer := getEndpointwithToken(endpoint)
 
-	status, data := post(buffer.String(), nil)
+	status, data := hq.Post(buffer.String(), nil)
 
 	return status, data
 }

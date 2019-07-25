@@ -34,7 +34,7 @@ func VswitchCreate(endpoint string, body VswitchCreateBody) (int, []byte) {
 	b := buildVswitchCreateRequest(body)
 
 	buffer := getEndpointwithVswitchs(endpoint)
-	status, data := post(buffer.String(), b)
+	status, data := hq.Post(buffer.String(), b)
 
 	return status, data
 }
@@ -46,7 +46,7 @@ func VswitchDelete(endpoint string, name string) (int, []byte) {
 	buffer.WriteString("/")
         buffer.WriteString(name)
 
-        status, data := delete(buffer.String(), nil)
+        status, data := hq.Delete(buffer.String(), nil)
 
 	return status, data
 }
@@ -54,7 +54,7 @@ func VswitchDelete(endpoint string, name string) (int, []byte) {
 // VswitchList is used to list vswitchs, it takes no parameters
 func VswitchList(endpoint string) (int, []byte) {
 	buffer := getEndpointwithVswitchs(endpoint)
-	status, data := get(buffer.String())
+	status, data := hq.Get(buffer.String())
 
 	return status, data
 }
@@ -64,7 +64,7 @@ func VswitchGet(endpoint string, name string) (int, []byte) {
         buffer := getEndpointwithVswitchs(endpoint)
         buffer.WriteString("/")
         buffer.WriteString(name)
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
 
         return status, data
 }

@@ -1,8 +1,6 @@
 package zvmsdk
 
 import (
-        "net/http"
-	"strings"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -12,17 +10,17 @@ type HttpRequestMock struct {
 }
 
 func (h *HttpRequestMock) Get(url string) (int, []byte) {
-        return 200, ""
+        return 200, []byte("")
 }
 
 func (h *HttpRequestMock) Post(url string, body []byte) (int, []byte) {
-	return 200, ""
+	return 200, []byte("")
 }
 
 func (h *HttpRequestMock) Put(url string, body []byte, context RequestContext) (int, []byte) {
-	return 200, ""
+	return 200, []byte("")
 }
 
 func (h *HttpRequestMock) Delete(url string, body []byte) (int, []byte){
-	return 200, ""
+	return 200, []byte("")
 }

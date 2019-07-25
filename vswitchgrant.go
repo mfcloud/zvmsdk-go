@@ -76,7 +76,7 @@ func vswitchCouple(endpoint string, body VswitchGrantCreateBody, ctxt RequestCon
 	b := buildVswitchCoupleRequest(&cb)
 
 	buffer := getEndpointForCouple(endpoint, body.Userid, body.Nic)
-	status, data := put(buffer.String(), b, ctxt)
+	status, data := hq.Put(buffer.String(), b, ctxt)
 
 	return status, data
 }
@@ -88,7 +88,7 @@ func vswitchGrant(endpoint string, body VswitchGrantCreateBody, ctxt RequestCont
         b := buildVswitchGrantRequest(&gb)
 
         buffer := getEndpointForGrant(endpoint, body.Vswitch)
-        status, data := put(buffer.String(), b, ctxt)
+        status, data := hq.Put(buffer.String(), b, ctxt)
 
         return status, data
 }

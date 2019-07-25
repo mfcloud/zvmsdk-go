@@ -47,7 +47,7 @@ func ImageCreate(endpoint string, body ImageCreateBody) (int, []byte) {
 	request := buildImageCreateRequest(body)
 
 	buffer := getEndpointwithImages(endpoint)
-	status, data := post(buffer.String(), request)
+	status, data := hq.Post(buffer.String(), request)
 
 	return status, data
 }
@@ -58,7 +58,7 @@ func ImageDelete(endpoint string, image string) (int, []byte) {
 	buffer.WriteString("/")
 	buffer.WriteString(image)
 
-	status, data := delete(buffer.String(), nil)
+	status, data := hq.Delete(buffer.String(), nil)
 
 	return status, data
 }
@@ -72,7 +72,7 @@ func ImageGet(endpoint string, name string) (int, []byte) {
 		buffer.WriteString("?imagename=")
 		buffer.WriteString(name)
 	}
-	status, data := get(buffer.String())
+	status, data := hq.Get(buffer.String())
 	return status, data
 }
 
@@ -89,7 +89,7 @@ func ImageUpdate(endpoint string, name string, body ImageUpdateBody) (int, []byt
                 values: headers,
         }
 
-        status, data := put(buffer.String(), request, ctxt)
+        status, data := hq.Put(buffer.String(), request, ctxt)
 
         return status, data
 
@@ -103,7 +103,7 @@ func ImageGetRootDiskSize(endpoint string, name string) (int, []byte) {
         buffer.WriteString(name)
         buffer.WriteString("/root_disk_size")
 
-        status, data := get(buffer.String())
+        status, data := hq.Get(buffer.String())
         return status, data
 
 }

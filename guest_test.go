@@ -6,6 +6,13 @@ import (
 
 )
 
+var hmock *HttpRequestMock
+
+func init() {
+	hmock = new(HttpRequestMock)
+	hq = hmock
+}
+
 func Test_GuestList(t *testing.T) {
         //FIXME: mock this later
         status, _ := GuestList(testEndpoint)
@@ -49,6 +56,8 @@ func Test_GuestCreate(t *testing.T) {
         disklist[1].Boot = "0"
 
         vs.DiskList = disklist
+
+	hmock.On("Post", "1234").Return(nil)
 
         status, _ := GuestCreate(testEndpoint, vs)
 	require.Equal(t, 200, status)

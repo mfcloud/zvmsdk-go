@@ -52,7 +52,7 @@ func GuestInterfaceCreate(endpoint string, userid string, body GuestInterfaceCre
 	request := buildInterfaceCreateRequest(body)
 
 	buffer := getEndpointwithInterface(endpoint, userid)
-	status, data := post(buffer.String(), request)
+	status, data := hq.Post(buffer.String(), request)
 
 	return status, data
 }

@@ -1,3 +1,3 @@
 package zvmsdk
 
-var hq HttpReq
+var hq IHttprequest
