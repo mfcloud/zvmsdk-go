@@ -30,6 +30,9 @@ func Test_ImageCreate(t *testing.T) {
         ic.RemoteHost = "remotehost1"
 	ic.Meta = meta
 	ic.URL= "url1"
+	buf := getEndpointwithImages(testEndpoint)
+        body := `{"image_name":"name1","remote_host":"remotehost1","image_meta":{"apple":"5","lettuce":"7"},"url":"url1"}`
+        hmock.On("Post", buf.String(), []byte(body)).Return(200, []byte(""))
 
         status, _ := ImageCreate(testEndpoint, ic)
         require.Equal(t, status, 200)

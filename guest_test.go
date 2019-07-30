@@ -56,7 +56,9 @@ func Test_GuestCreate(t *testing.T) {
         disklist[1].Boot = "0"
 
         vs.DiskList = disklist
-	hmock.On("Post", "1234").Return(nil)
+	buf := getEndpointwithGuests(testEndpoint)
+	body := `{"guest":{"userid":"name1","vcpus":1,"memory":32,"disk_list":[{"size":"1G","format":"ECKD","is_boot_disk":"1"},{"size":"2G","format":"FBA","is_boot_disk":"0"}],"disk_pool":"disk1"}}`
+	hmock.On("Post", buf.String(), []byte(body)).Return(200, []byte(""))
 	assert := assert.New(t)
 
         status, _ := GuestCreate(testEndpoint, vs)
@@ -73,6 +75,10 @@ func Test_GuestCreateDisk(t *testing.T) {
         disklist[1].Format = "FBA"
         disklist[1].Boot = "0"
 
+	buf := getEndpointwithGuests(testEndpoint)
+	buf.WriteString("/name1/disks")	
+        body := `[{"size":"1G","format":"ECKD","is_boot_disk":"1"},{"size":"2G","format":"FBA","is_boot_disk":"0"}]`
+	hmock.On("Post", buf.String(), []byte(body)).Return(200, []byte(""))
         status, _ := GuestCreateDisks(testEndpoint, "name1", disklist)
         require.Equal(t, 200, status)
 }
