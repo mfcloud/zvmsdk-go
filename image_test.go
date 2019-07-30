@@ -6,16 +6,26 @@ import (
 )
 
 func Test_ImageGetRootDiskSize(t *testing.T) {
+	buf := getEndpointwithImages(testEndpoint)
+	buf.WriteString("/image1/root_disk_size")
+	hmock.On("Get", buf.String()).Return(200, []byte(""))
+
 	status, _ := ImageGetRootDiskSize(testEndpoint, "image1")
 	require.Equal(t, status, 200)
 }
 
 func Test_ImageGetWithName(t *testing.T) {
+	buf := getEndpointwithImages(testEndpoint)
+	buf.WriteString("?imagename=image1")
+	hmock.On("Get", buf.String()).Return(200, []byte(""))
 	status, _ := ImageGet(testEndpoint, "image1")
 	require.Equal(t, status, 200)
 }
 
 func Test_ImageGet(t *testing.T) {
+	buf := getEndpointwithImages(testEndpoint)
+	hmock.On("Get", buf.String()).Return(200, []byte(""))
+
 	status, _ := ImageGet(testEndpoint, "")
 	require.Equal(t, status, 200)
 }

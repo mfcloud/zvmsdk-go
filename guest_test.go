@@ -14,13 +14,17 @@ func init() {
 }
 
 func Test_GuestList(t *testing.T) {
-	//FIXME: mock this later
+	buf := getEndpointwithGuests(testEndpoint)
+	hmock.On("Get", buf.String()).Return(200, []byte(""))
 	status, _ := GuestList(testEndpoint)
 	require.Equal(t, 200, status)
 }
 
 func Test_GuestGet(t *testing.T) {
 	name := "name1"
+	buf := getEndpointwithGuests(testEndpoint)
+	buf.WriteString("/name1")
+	hmock.On("Get", buf.String()).Return(200, []byte(""))
 
 	status, _ := GuestGet(testEndpoint, name)
 	require.Equal(t, 200, status)
@@ -29,6 +33,9 @@ func Test_GuestGet(t *testing.T) {
 func Test_GuestGetInfo(t *testing.T) {
 	name := "name1"
 
+	buf := getEndpointwithGuests(testEndpoint)
+	buf.WriteString("/name1/info")
+	hmock.On("Get", buf.String()).Return(200, []byte(""))
 	status, _ := GuestGetInfo(testEndpoint, name)
 	require.Equal(t, 200, status)
 }
@@ -36,6 +43,9 @@ func Test_GuestGetInfo(t *testing.T) {
 func Test_GuestGetPowerState(t *testing.T) {
 	name := "name1"
 
+	buf := getEndpointwithGuests(testEndpoint)
+	buf.WriteString("/name1/power_state")
+	hmock.On("Get", buf.String()).Return(200, []byte(""))
 	status, _ := GuestGetPowerState(testEndpoint, name)
 	require.Equal(t, 200, status)
 }
