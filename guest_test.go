@@ -89,6 +89,11 @@ func Test_GuestDeleteDisk(t *testing.T) {
 	body.VdevList[0] = "123"
 	body.VdevList[1] = "456"
 
+	buf := getEndpointwithGuests(testEndpoint)
+	buf.WriteString("/name1/disks")
+	b := `{"vdev_list":["123","456"]}`
+	hmock.On("Delete", buf.String(), []byte(b)).Return(200, []byte(""))
+
 	status, _ := GuestDeleteDisks(testEndpoint, "name1", body)
 	require.Equal(t, 200, status)
 }

@@ -28,6 +28,9 @@ func Test_VswitchList(t *testing.T) {
 }
 
 func Test_VswitchDelete(t *testing.T) {
+	buf := getEndpointwithVswitchs(testEndpoint)
+	buf.WriteString("/id1")
+	hmock.On("Delete", buf.String(), []byte(nil)).Return(200, []byte(""))
 	status, _ := VswitchDelete(testEndpoint, "id1")
 	require.Equal(t, 200, status)
 }
