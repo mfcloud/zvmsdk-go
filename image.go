@@ -82,7 +82,7 @@ func ImageUpdate(endpoint string, name string, body ImageUpdateBody) (int, []byt
 	buffer.WriteString("/")
 	buffer.WriteString(name)
 
-	headers := buildAuthContext("abc")
+	headers := buildAuthContext("")
 	ctxt := RequestContext{
 		values: headers,
 	}

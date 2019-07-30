@@ -108,6 +108,15 @@ func Test_GuestConfigDisk(t *testing.T) {
 	disklist[1].Format = "FBA"
 	disklist[1].MntDir = "/mnt/abc"
 
+	headers := buildAuthContext("")
+	ctxt := RequestContext{
+		values: headers,
+	}
+
+	buf := getEndpointwithGuests(testEndpoint)
+	buf.WriteString("/name1/disks")
+	b := `[{"vdev":"1111","format":"ECKD","mntdir":"/mnt1"},{"vdev":"2222","format":"FBA","mntdir":"/mnt/abc"}]`
+	hmock.On("Put", buf.String(), []byte(b), ctxt).Return(200, []byte(""))
 	status, _ := GuestConfigDisks(testEndpoint, "name1", disklist)
 	require.Equal(t, 200, status)
 }

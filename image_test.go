@@ -42,7 +42,15 @@ func Test_ImageUpdate(t *testing.T) {
 	ic.DestURL = "url1"
 	ic.RemoteHost = "name1"
 
-	status, _ := ImageUpdate(testEndpoint, "vsw1", ic)
+	headers := buildAuthContext("")
+	ctxt := RequestContext{
+		values: headers,
+	}
+	buf := getEndpointwithImages(testEndpoint)
+	buf.WriteString("/image1")
+	b := `{"dest_url":"url1","remote_host":"name1"}`
+	hmock.On("Put", buf.String(), []byte(b), ctxt).Return(200, []byte(""))
+	status, _ := ImageUpdate(testEndpoint, "image1", ic)
 	require.Equal(t, status, 200)
 
 }
