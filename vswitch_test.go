@@ -29,3 +29,15 @@ func Test_VswitchGet(t *testing.T) {
 	status, _ := VswitchGet(testEndpoint, "vsw1")
 	require.Equal(t, 200, status)
 }
+
+func Test_VswitchCreate(t *testing.T) {
+        var vs VswitchCreateBody 
+        vs.Name = "name1"
+        vs.Rdev = "1"
+        buf := getEndpointwithVswitchs(testEndpoint)
+        body := `{"name":"name1","rdev":"1"}`
+        hmock.On("Post", buf.String(), []byte(body)).Return(200, []byte(""))
+
+        status, _ := VswitchCreate(testEndpoint, vs)
+        require.Equal(t, 200, status)
+}
