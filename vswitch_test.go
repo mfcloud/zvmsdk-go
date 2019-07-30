@@ -1,12 +1,10 @@
 package zvmsdk
 
 import (
-	"testing"
 	"encoding/json"
 	"github.com/stretchr/testify/require"
-
+	"testing"
 )
-
 
 func Test_buildVswitchCreateRequest(t *testing.T) {
 	var vs VswitchCreateBody
@@ -17,13 +15,12 @@ func Test_buildVswitchCreateRequest(t *testing.T) {
 
 	result := VswitchCreateBody{}
 	err := json.Unmarshal(data, &result)
-        if err != nil {
+	if err != nil {
 		panic(err.Error())
 	}
 	require.Equal(t, result.Name, "name1")
 	require.Equal(t, result.Rdev, "rdev1")
 }
-
 
 func Test_VswitchList(t *testing.T) {
 	status, _ := VswitchList(testEndpoint)
@@ -36,7 +33,6 @@ func Test_VswitchDelete(t *testing.T) {
 }
 
 func Test_VswitchGet(t *testing.T) {
-        status, _ := VswitchGet(testEndpoint, "vsw1")
-        require.Equal(t, 200, status)
+	status, _ := VswitchGet(testEndpoint, "vsw1")
+	require.Equal(t, 200, status)
 }
-

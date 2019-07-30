@@ -1,20 +1,18 @@
 package zvmsdk
 
-
 import (
 	"bytes"
 	"encoding/json"
 )
 
-
 type coupleInfo struct {
-	Couple string `json:"couple"`
-	Active string `json:"active"`
+	Couple  string `json:"couple"`
+	Active  string `json:"active"`
 	Vswitch string `json:"vswitch"`
 }
 
 type coupleBody struct {
-	Info   coupleInfo `json:"info,omitempty"`
+	Info coupleInfo `json:"info,omitempty"`
 }
 
 type grantUserid struct {
@@ -28,43 +26,43 @@ type grantBody struct {
 // VswitchCreateBody will be used by upper layer
 // when calling vswitch create function
 type VswitchGrantCreateBody struct {
-	Userid string `json:"name"`
-	Nic string `json:"rdev"`
+	Userid  string `json:"name"`
+	Nic     string `json:"rdev"`
 	Vswitch string `json:"vswitch"`
 }
 
-func getEndpointForCouple(endpoint string, userid string, nic string) (bytes.Buffer) {
-        var buffer bytes.Buffer
+func getEndpointForCouple(endpoint string, userid string, nic string) bytes.Buffer {
+	var buffer bytes.Buffer
 
-        buffer.WriteString(endpoint)
-        buffer.WriteString("/guests/")
+	buffer.WriteString(endpoint)
+	buffer.WriteString("/guests/")
 	buffer.WriteString(userid)
 	buffer.WriteString("/nic/")
 	buffer.WriteString(nic)
 
-        return buffer
+	return buffer
 }
 
-func getEndpointForGrant(endpoint string, vswitch string) (bytes.Buffer) {
-        var buffer bytes.Buffer
+func getEndpointForGrant(endpoint string, vswitch string) bytes.Buffer {
+	var buffer bytes.Buffer
 
-        buffer.WriteString(endpoint)
-        buffer.WriteString("/vswitches/")
-        buffer.WriteString(vswitch)
+	buffer.WriteString(endpoint)
+	buffer.WriteString("/vswitches/")
+	buffer.WriteString(vswitch)
 
-        return buffer
+	return buffer
 }
 
-func buildVswitchGrantRequest(body *grantBody) ([]byte) {
+func buildVswitchGrantRequest(body *grantBody) []byte {
 	data, _ := json.Marshal(*body)
 
-        return data
+	return data
 }
 
-func buildVswitchCoupleRequest(cb *coupleBody) ([]byte) {
+func buildVswitchCoupleRequest(cb *coupleBody) []byte {
 	data, _ := json.Marshal(*cb)
 
-        return data
+	return data
 }
 
 func vswitchCouple(endpoint string, body VswitchGrantCreateBody, ctxt RequestContext) (int, []byte) {
@@ -83,16 +81,16 @@ func vswitchCouple(endpoint string, body VswitchGrantCreateBody, ctxt RequestCon
 
 func vswitchGrant(endpoint string, body VswitchGrantCreateBody, ctxt RequestContext) (int, []byte) {
 	var gb grantBody
-        gb.Vswitch.Userid = body.Userid
+	gb.Vswitch.Userid = body.Userid
 
-        b := buildVswitchGrantRequest(&gb)
+	b := buildVswitchGrantRequest(&gb)
 
-        buffer := getEndpointForGrant(endpoint, body.Vswitch)
-        status, data := hq.Put(buffer.String(), b, ctxt)
+	buffer := getEndpointForGrant(endpoint, body.Vswitch)
+	status, data := hq.Put(buffer.String(), b, ctxt)
 
-        return status, data
+	return status, data
 }
-	
+
 func VswitchGrant(endpoint string, body VswitchGrantCreateBody) (int, []byte) {
 	headers := buildAuthContext("")
 	ctxt := RequestContext{

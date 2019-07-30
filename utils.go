@@ -1,36 +1,32 @@
 package zvmsdk
 
-
 import (
-        "encoding/json"
+	"encoding/json"
 )
 
+func buildJSON(keys []string, values []interface{}) []byte {
 
-func buildJSON(keys []string, values []interface{}) ([]byte) {
+	// map values to keys
+	m := make(map[string]interface{})
+	for i, v := range values {
+		m[keys[i]] = v
+	}
+	// convert map to JSON
+	data, _ := json.Marshal(m)
 
-        // map values to keys
-        m := make(map[string]interface{})
-        for i,v := range values {
-                m[keys[i]] = v
-        }
-        // convert map to JSON
-        data, _ := json.Marshal(m)
-
-        return data
+	return data
 }
 
-
-func buildAuthContext(authToken string) (map[string]string) {
+func buildAuthContext(authToken string) map[string]string {
 	m := make(map[string]string)
 
 	m["X-Auth-Token"] = authToken
 	return m
 }
 
-func buildAdminContext(adminToken string) (map[string]string) {
-        m := make(map[string]string)
+func buildAdminContext(adminToken string) map[string]string {
+	m := make(map[string]string)
 
-        m["X-Admin-Token"] = adminToken
-        return m
+	m["X-Admin-Token"] = adminToken
+	return m
 }
-

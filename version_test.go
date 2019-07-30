@@ -1,10 +1,9 @@
 package zvmsdk
 
 import (
-	"testing"
 	"github.com/stretchr/testify/require"
+	"testing"
 )
-
 
 func Test_VersionGet(t *testing.T) {
 
@@ -12,4 +11,3 @@ func Test_VersionGet(t *testing.T) {
 
 	require.Equal(t, status, 200)
 }
-

@@ -4,15 +4,13 @@ import (
 	"bytes"
 )
 
+func getEndpointwithHost(endpoint string) bytes.Buffer {
+	var buffer bytes.Buffer
 
-func getEndpointwithHost(endpoint string) (bytes.Buffer) {
-        var buffer bytes.Buffer
-
-        buffer.WriteString(endpoint)
-        buffer.WriteString("/host")
-        return buffer
+	buffer.WriteString(endpoint)
+	buffer.WriteString("/host")
+	return buffer
 }
-
 
 // HostInfo gets information for the host (z/VM) running on
 func HostInfo(endpoint string) (int, []byte) {
@@ -28,9 +26,9 @@ func HostDiskpoolInfo(endpoint string, disk string) (int, []byte) {
 
 	buffer := getEndpointwithHost(endpoint)
 	buffer.WriteString("/disk/")
-        buffer.WriteString(disk)
+	buffer.WriteString(disk)
 
-        status, data := hq.Get(buffer.String())
+	status, data := hq.Get(buffer.String())
 
-        return status, data
+	return status, data
 }
