@@ -91,7 +91,7 @@ func vswitchGrant(endpoint string, body VswitchGrantCreateBody, ctxt RequestCont
 	return status, data
 }
 
-func VswitchGrant(endpoint string, body VswitchGrantCreateBody) (int, []byte) {
+func VswitchCoupleGrant(endpoint string, body VswitchGrantCreateBody) (int, []byte) {
 	headers := buildAuthContext("")
 	ctxt := RequestContext{
 		values: headers,
@@ -99,6 +99,7 @@ func VswitchGrant(endpoint string, body VswitchGrantCreateBody) (int, []byte) {
 
 	// FIXME
 	vswitchCouple(endpoint, body, ctxt)
+
 	status, data := vswitchGrant(endpoint, body, ctxt)
 	return status, data
 }

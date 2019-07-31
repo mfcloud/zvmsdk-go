@@ -16,7 +16,7 @@ func getEndpointwithVswitchs(endpoint string) bytes.Buffer {
 	var buffer bytes.Buffer
 
 	buffer.WriteString(endpoint)
-	buffer.WriteString("/vswitchs")
+	buffer.WriteString("/vswitches")
 	return buffer
 }
 
